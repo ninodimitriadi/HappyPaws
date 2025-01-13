@@ -1,0 +1,42 @@
+# Xcode
+DerivedData/
+*.xcworkspace
+*.xcuserstate
+*.xccheckout
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Build directories
+build/
+Build/
+
+# Swift Package Manager
+.swiftpm/
+.build/
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+
+# Firebase
+GoogleService-Info.plist
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+
+# Temporary files
+*.swp
+*.swo
+
