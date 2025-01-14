@@ -11,6 +11,8 @@ import SwiftUI
 
 class LogInViewController: UIViewController {
     
+    private let viewModel = LogInViewModel()
+    
     private lazy var backgroundImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -33,7 +35,7 @@ class LogInViewController: UIViewController {
     private var logInLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Log In"
+        label.text = "Welcome Back!"
         label.font = UIFont(name: "Raleway-Bold", size: 30)
         label.textColor = .customBlue
         
@@ -92,6 +94,10 @@ class LogInViewController: UIViewController {
         button.configureButton(title: "Log in", fontSize: 17, backgroundColor: .customBlue)
         button.layer.cornerRadius = 5
         
+        button.addAction(UIAction(handler: { [weak self] _ in
+            self?.pressLogInButton(button: button)
+        }), for: .touchUpInside)
+        
         return button
     }()
 
@@ -132,11 +138,10 @@ class LogInViewController: UIViewController {
     private lazy var registerButton: UIButton = {
         let button = UIButton()
         button.configureButton(title: "New to HappyPaws? Register", fontSize: 13, titleColor: .customBlue, font: "Raleway-Regular")
-        
-        //MARK: add navitagion in sceneDelegate
-//        button.addAction(UIAction(handler: { [weak self] _ in
-//            self?.navigationController?.pushViewController(SignUpViewController(), animated: true)
-//        }), for: .touchUpInside)
+
+        button.addAction(UIAction(handler: { [weak self] _ in
+            self?.navigationController?.pushViewController(SignUpViewController(), animated: true)
+        }), for: .touchUpInside)
         return button
     }()
 
@@ -230,7 +235,28 @@ class LogInViewController: UIViewController {
             eyeImageView.image = UIImage(systemName: eyeIcon)
         }
     }
-
+    
+    private func pressLogInButton(button: UIButton) {
+        viewModel.email = mailTextField.text ?? ""
+        viewModel.password = passwordTextField.text ?? ""
+        
+        if !viewModel.validateFields() {
+            if let emailError = viewModel.emailError {
+                AlertManager.showBasicAlert(on: self, title: "Email Error", message: emailError)
+            } else if let passwordError = viewModel.passwordError {
+                AlertManager.showBasicAlert(on: self, title: "Password Error", message: passwordError)
+            }
+            return
+        }
+        
+        viewModel.logIn { [weak self] success, error in
+            if success {
+                self?.navigationController?.pushViewController(TabBarViewController(), animated: false)
+            } else {
+                AlertManager.showBasicAlert(on: LogInViewController(), title: error ?? "Error", message: error?.description)
+            }
+        }
+    }
 }
 
 struct LogInViewControllerWrapper: UIViewControllerRepresentable {
