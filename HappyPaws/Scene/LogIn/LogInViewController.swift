@@ -104,6 +104,10 @@ class LogInViewController: UIViewController {
     private lazy var forgetPasswordButton: UIButton = {
         let button = UIButton()
         button.configureButton(title: "Forgotten password?", fontSize: 13, titleColor: .customBlue, font: "Raleway-Regular")
+        button.addAction(UIAction(handler: { [weak self] _ in
+            self?.navigationController?.pushViewController(ForgetPasswordViewController(), animated: true)
+        }), for: .touchUpInside)
+        
         return button
     }()
     

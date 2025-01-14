@@ -28,7 +28,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
             guard let self = self else { return }
 
-            //MARK: login
             if Auth.auth().currentUser != nil {
                 let tabBarController = TabBarViewController()
                 self.window?.rootViewController = tabBarController
