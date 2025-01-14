@@ -83,8 +83,7 @@ class LaunchViewController: UIViewController {
     }
 
     private func transitionToMainApp() {
-//        let mainViewController = LogInViewController()
-        let mainViewController = SignUpViewController()
+        let mainViewController = LogInViewController()
         mainViewController.modalTransitionStyle = .crossDissolve
         mainViewController.modalPresentationStyle = .fullScreen
         present(mainViewController, animated: true, completion: nil)

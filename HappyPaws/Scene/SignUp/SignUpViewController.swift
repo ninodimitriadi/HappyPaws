@@ -10,6 +10,8 @@ import SwiftUI
 
 class SignUpViewController: UIViewController {
     
+    private let viewModel = SignUpViewModel()
+    
     private lazy var backgroundImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -32,8 +34,8 @@ class SignUpViewController: UIViewController {
     private var logInLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Sign Up"
-        label.font = UIFont(name: "Raleway-Bold", size: 30)
+        label.text = "Create an account"
+        label.font = UIFont(name: "Raleway-Bold", size: 27)
         label.textColor = .customBlue
         
         return label
@@ -43,6 +45,23 @@ class SignUpViewController: UIViewController {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = " Email Address"
+        textField.font = UIFont.systemFont(ofSize: 14)
+        textField.textAlignment = .left
+        textField.layer.cornerRadius = 5
+        textField.layer.borderWidth = 1.0
+        textField.layer.borderColor = UIColor.customBlue.cgColor
+        textField.layer.shadowColor = UIColor.customBlue.cgColor
+        textField.layer.shadowOpacity = 0.5
+        textField.layer.shadowOffset = CGSize(width: 0, height: 2)
+        textField.layer.shadowRadius = 4
+
+        return textField
+    }()
+    
+    private lazy var userNameTextField: UITextField = {
+        let textField = UITextField()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.placeholder = " Username"
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.textAlignment = .left
         textField.layer.cornerRadius = 5
@@ -86,40 +105,15 @@ class SignUpViewController: UIViewController {
         return textField
     }()
     
-    private lazy var confirmPasswordTextField: UITextField = {
-        let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = " Confirm Password"
-        textField.font = UIFont.systemFont(ofSize: 14)
-        textField.textAlignment = .left
-        textField.isSecureTextEntry = true
-        textField.layer.cornerRadius = 5
-        textField.layer.borderWidth = 1.0
-        textField.layer.borderColor = UIColor.customBlue.cgColor
-        textField.layer.shadowColor = UIColor.customBlue.cgColor
-        textField.layer.shadowOpacity = 0.5
-        textField.layer.shadowOffset = CGSize(width: 0, height: 2)
-        textField.layer.shadowRadius = 4
-
-        let eyeImageView = UIImageView(image: UIImage(systemName: "eye"))
-        eyeImageView.tintColor = .gray
-        let eyeTapGesture = UITapGestureRecognizer(target: self, action: #selector(togglePasswordVisibility))
-        eyeImageView.isUserInteractionEnabled = true
-        eyeImageView.addGestureRecognizer(eyeTapGesture)
-
-        let rightView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
-        eyeImageView.center = rightView.center
-        rightView.addSubview(eyeImageView)
-        textField.rightView = rightView
-        textField.rightViewMode = .always
-
-        return textField
-    }()
-    
     private lazy var signUpButton: UIButton = {
         let button = UIButton()
-        button.configureButton(title: "Log in", fontSize: 17, backgroundColor: .customBlue)
+        button.configureButton(title: "Sign Up", fontSize: 17, backgroundColor: .customBlue)
         button.layer.cornerRadius = 5
+        
+        button.addAction(UIAction(handler: { [weak self] _ in
+            self?.pressSignUpButton(button: button)
+        }), for: .touchUpInside)
+        
         
         return button
     }()
@@ -148,7 +142,6 @@ class SignUpViewController: UIViewController {
         button.layer.shadowOffset = CGSize(width: 0, height: 2)
         button.layer.shadowRadius = 4
         
-        
         return button
     }()
     
@@ -158,6 +151,10 @@ class SignUpViewController: UIViewController {
         button.tintColor = .white
         button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
         
+        button.addAction(UIAction(handler: {[weak self] _ in
+            self?.navigationController?.popViewController(animated: true)
+        }), for: .touchUpInside)
+        
         return button
     }()
 
@@ -165,6 +162,7 @@ class SignUpViewController: UIViewController {
         super.viewDidLoad()
         setUpUI()
         setUpConstraints()
+        viewModel.delegate = self
     }
     
     private func setUpUI() {
@@ -173,11 +171,12 @@ class SignUpViewController: UIViewController {
         view.addSubview(backButton)
         viewForFields.addSubview(logInLabel)
         viewForFields.addSubview(mailTextField)
+        viewForFields.addSubview(userNameTextField)
         viewForFields.addSubview(passwordTextField)
-        viewForFields.addSubview(confirmPasswordTextField)
         viewForFields.addSubview(signUpButton)
         viewForFields.addSubview(orLabel)
         viewForFields.addSubview(loginWithGoogle)
+        navigationController?.isNavigationBarHidden = true
     }
     
     private func setUpConstraints() {
@@ -208,21 +207,21 @@ class SignUpViewController: UIViewController {
         ])
         
         NSLayoutConstraint.activate([
-            passwordTextField.topAnchor.constraint(equalTo: mailTextField.bottomAnchor, constant: 20),
+            userNameTextField.topAnchor.constraint(equalTo: mailTextField.bottomAnchor, constant: 20),
+            userNameTextField.leftAnchor.constraint(equalTo: viewForFields.leftAnchor, constant: 30),
+            userNameTextField.rightAnchor.constraint(equalTo: viewForFields.rightAnchor, constant: -30),
+            userNameTextField.heightAnchor.constraint(equalToConstant: 35)
+        ])
+        
+        NSLayoutConstraint.activate([
+            passwordTextField.topAnchor.constraint(equalTo: userNameTextField.bottomAnchor, constant: 20),
             passwordTextField.leftAnchor.constraint(equalTo: viewForFields.leftAnchor, constant: 30),
             passwordTextField.rightAnchor.constraint(equalTo: viewForFields.rightAnchor, constant: -30),
             passwordTextField.heightAnchor.constraint(equalToConstant: 35)
         ])
         
         NSLayoutConstraint.activate([
-            confirmPasswordTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 20),
-            confirmPasswordTextField.leftAnchor.constraint(equalTo: viewForFields.leftAnchor, constant: 30),
-            confirmPasswordTextField.rightAnchor.constraint(equalTo: viewForFields.rightAnchor, constant: -30),
-            confirmPasswordTextField.heightAnchor.constraint(equalToConstant: 35)
-        ])
-        
-        NSLayoutConstraint.activate([
-            signUpButton.topAnchor.constraint(equalTo: confirmPasswordTextField.bottomAnchor, constant: 30),
+            signUpButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 30),
             signUpButton.leftAnchor.constraint(equalTo: viewForFields.leftAnchor, constant: 30),
             signUpButton.rightAnchor.constraint(equalTo: viewForFields.rightAnchor, constant: -30),
             signUpButton.heightAnchor.constraint(equalToConstant: 35)
@@ -253,6 +252,38 @@ class SignUpViewController: UIViewController {
         let eyeIcon = passwordTextField.isSecureTextEntry ? "eye" : "eye.slash"
         if let eyeImageView = passwordTextField.rightView?.subviews.first as? UIImageView {
             eyeImageView.image = UIImage(systemName: eyeIcon)
+        }
+    }
+    
+    private func pressSignUpButton(button: UIButton) {
+        
+        guard let email = mailTextField.text,
+              let username = userNameTextField.text,
+              let password = passwordTextField.text, !email.isEmpty, !username.isEmpty, !password.isEmpty else {
+            AlertManager.showRegistrationErrorAlert(on: self, with: NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Please fill out all fields."]))
+            return
+        }
+        
+        viewModel.registerUser(username: username, email: email, password: password)
+    }
+}
+    
+    
+extension SignUpViewController: SignUpViewModelDelegate {
+    func registrationCompleted(success: Bool, error: Error?) {
+        if let error = error {
+            AlertManager.showRegistrationErrorAlert(on: self, with: error)
+            return
+        }
+        
+        if success {
+            let successAlert = UIAlertController(title: "Registration Successful", message: "Your account has been created successfully!", preferredStyle: .alert)
+            successAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+                self.navigationController?.popViewController(animated: true)
+            }))
+            self.present(successAlert, animated: true, completion: nil)
+        } else {
+            AlertManager.showRegistrationErrorAlert(on: self)
         }
     }
 }
