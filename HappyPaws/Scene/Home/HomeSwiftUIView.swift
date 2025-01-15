@@ -16,7 +16,8 @@ struct HomeSwiftUIView: View {
             gender: .male,
             imageName: "dog",
             weight: 30,
-            height: 60
+            height: 60,
+            color: "white"
         ),
         PetModel(
             name: "Bella",
@@ -25,7 +26,8 @@ struct HomeSwiftUIView: View {
             gender: .female,
             imageName: "dog",
             weight: 25,
-            height: 55
+            height: 55,
+            color: "Black"
         ),
         PetModel(
             name: "Max",
@@ -34,7 +36,8 @@ struct HomeSwiftUIView: View {
             gender: .male,
             imageName: "dog",
             weight: 20,
-            height: 50
+            height: 50,
+            color: "Wight"
         ),
         PetModel(
             name: "Lucy",
@@ -43,7 +46,8 @@ struct HomeSwiftUIView: View {
             gender: .female,
             imageName: "dog",
             weight: 22,
-            height: 45
+            height: 45,
+            color: "Ginger"
         )
     ]
 
@@ -69,7 +73,7 @@ struct HomeSwiftUIView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         ForEach(pets, id: \.name) { pet in
-                            NavigationLink(destination: PetDetailsView()) {
+                            NavigationLink(destination: PetProfileUIView(pet: pet)) {
                                 PetCardView(pet: pet)
                             }
                         }

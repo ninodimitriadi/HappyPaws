@@ -8,13 +8,8 @@
 import SwiftUI
 
 struct PetCardView: View {
-    var petName: String = "Buddy"
-    var petBreed: String = "Golden Retriever"
-    var petAge: String = "3 Years"
-    var petImage: String = "dog"
-    var petGender: String = "Male"
-    
-    var pet = PetModel(name: "Buddy", breed: "Golden Retriever", age: 3, gender: .male, imageName: "dog", weight: 4, height: 42)
+
+    var pet: PetModel
     
     var body: some View {
         HStack {
@@ -31,7 +26,7 @@ struct PetCardView: View {
                         .font(.headline)
                         .foregroundColor(.black)
                     Spacer()
-                    Image(petGender == "Male" ? "male" : "female")
+                    Image(pet.gender == .male ? "male" : "female")
                       .resizable()
                       .scaledToFill()
                       .frame(width: 30, height: 30)
@@ -54,5 +49,14 @@ struct PetCardView: View {
 }
 
 #Preview {
-    PetCardView()
+    PetCardView(pet: PetModel(
+        name: "Buddy",
+        breed: "Golden Retriever",
+        age: 3,
+        gender: .male,
+        imageName: "dog",
+        weight: 30,
+        height: 60,
+        color: "white"
+    ))
 }

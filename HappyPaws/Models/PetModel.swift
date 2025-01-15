@@ -15,6 +15,7 @@ struct PetModel {
     var imageName: String
     var weight: Int
     var height: Int
+    var color: String
 }
 
 enum Gender: String {
