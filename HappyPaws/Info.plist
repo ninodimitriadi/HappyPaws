@@ -19,6 +19,17 @@
 			</array>
 		</dict>
 	</dict>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.642880758804-gvufhjao5hf0ffsj4h4mqi9s6l74hc99</string>
+            </array>
+        </dict>
+    </array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Roboto.ttf</string>

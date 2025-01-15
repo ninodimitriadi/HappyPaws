@@ -134,13 +134,16 @@ class SignUpViewController: UIViewController {
         button.backgroundColor = .white
         button.layer.cornerRadius = 23
         button.setImage(UIImage(named: "google"), for: .normal)
-        button.setImage(UIImage(named: "google"), for: .normal)
         button.imageView?.contentMode = .scaleAspectFit
         button.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowOpacity = 1
         button.layer.shadowOffset = CGSize(width: 0, height: 2)
         button.layer.shadowRadius = 4
+        
+        button.addAction(UIAction(handler: { [weak self] _ in
+            self?.googleSignInTapped()
+        }), for: .touchUpInside)
         
         return button
     }()
@@ -265,6 +268,16 @@ class SignUpViewController: UIViewController {
         }
         
         viewModel.registerUser(username: username, email: email, password: password)
+    }
+    
+    private func googleSignInTapped() {
+        viewModel.signInWithGoogle(presenting: self) { [weak self] success, error in
+            if success {
+                self?.navigationController?.pushViewController(TabBarViewController(), animated: true)
+            } else if let error = error {
+                AlertManager.showBasicAlert(on: LogInViewController(), title: "Error", message: error)
+            }
+        }
     }
 }
     
