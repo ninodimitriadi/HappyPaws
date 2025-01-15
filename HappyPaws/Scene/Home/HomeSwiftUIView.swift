@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct HomeSwiftUIView: View {
+    
+    @State private var isAddPetPagePresented = false
+    
     let pets = [
         PetModel(
             name: "Buddy",
@@ -61,11 +64,15 @@ struct HomeSwiftUIView: View {
                         .foregroundColor(.roilaBlue)
                     Spacer()
                     Button(action: {
-                        print("Add new pet tapped!")
+                        isAddPetPagePresented.toggle()
                     }) {
                         Image(systemName: "plus")
                             .font(.title)
                             .foregroundColor(.roilaBlue)
+                    }
+                    .padding()
+                    .sheet(isPresented: $isAddPetPagePresented) {
+                        AddPetUIView()
                     }
                 }
                 .padding()
