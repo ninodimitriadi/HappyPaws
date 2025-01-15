@@ -18,7 +18,7 @@ struct PetModel {
     var color: String
 }
 
-enum Gender: String {
+enum Gender: String, CaseIterable {
     case female = "Female"
     case male = "Male"
 }
