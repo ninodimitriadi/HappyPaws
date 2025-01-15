@@ -1,14 +1,14 @@
 //
-//  HomeViewController.swift
+//  VetClinicViewController.swift
 //  HappyPaws
 //
-//  Created by nino on 1/14/25.
+//  Created by nino on 1/15/25.
 //
 
 import UIKit
 
-class HomeViewController: UIViewController {
-    
+class VetClinicViewController: UIViewController {
+
     private lazy var loginButton: UIButton = {
         let button = UIButton()
         button.configureButton(title: "Log in", fontSize: 17, backgroundColor: .customBlue)
@@ -34,4 +34,5 @@ class HomeViewController: UIViewController {
             loginButton.widthAnchor.constraint(equalToConstant: 300),
         ])
     }
+
 }
