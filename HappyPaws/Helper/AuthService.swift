@@ -31,10 +31,12 @@ class AuthService {
                 return
             }
             
+            let uid = resultUser.uid
             let db = Firestore.firestore()
             db.collection("users")
-                .document(resultUser.uid)
+                .document(uid)
                 .setData([
+                    "uid": uid,
                     "username": username,
                     "email": email
                 ]) { error in
@@ -77,7 +79,60 @@ class AuthService {
         }
     }
     
-    public func fetchUser(completion: @escaping (User?, Error?) -> Void) {
+    public func fetchUser(completion: @escaping (UserModel?, Error?) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            completion(nil, NSError(domain: "AuthService", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not logged in"]))
+            return
+        }
         
+        let uid = currentUser.uid
+        let db = Firestore.firestore()
+        
+        db.collection("users").document(uid).getDocument { document, error in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
+            guard let document = document, document.exists,
+                  let data = document.data(),
+                  let username = data["username"] as? String,
+                  let email = data["email"] as? String else {
+                completion(nil, NSError(domain: "AuthService", code: 404, userInfo: [NSLocalizedDescriptionKey: "User data not found"]))
+                return
+            }
+            
+            // Parse pets array if it exists
+            var pets: [PetModel] = []
+            if let petsData = data["pets"] as? [[String: Any]] {
+                pets = petsData.compactMap { petDict in
+                    guard let name = petDict["name"] as? String,
+                          let breed = petDict["breed"] as? String,
+                          let age = petDict["age"] as? Int,
+                          let genderRaw = petDict["gender"] as? String,
+                          let gender = Gender(rawValue: genderRaw),
+                          let imageName = petDict["imageName"] as? String,
+                          let weight = petDict["weight"] as? Int,
+                          let height = petDict["height"] as? Int,
+                          let color = petDict["color"] as? String else {
+                        return nil
+                    }
+                    return PetModel(
+                        name: name,
+                        breed: breed,
+                        age: age,
+                        gender: gender,
+                        imageName: imageName,
+                        weight: weight,
+                        height: height,
+                        color: color
+                    )
+                }
+            }
+            
+            // Create UserModel with pets
+            let user = UserModel(uID: uid, userName: username, email: email, pets: pets)
+            completion(user, nil)
+        }
     }
 }

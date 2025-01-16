@@ -10,49 +10,7 @@ import SwiftUI
 struct HomeSwiftUIView: View {
     
     @State private var isAddPetPagePresented = false
-    
-    let pets = [
-        PetModel(
-            name: "Buddy",
-            breed: "Golden Retriever",
-            age: 3,
-            gender: .male,
-            imageName: "dog",
-            weight: 30,
-            height: 60,
-            color: "white"
-        ),
-        PetModel(
-            name: "Bella",
-            breed: "Labrador Retriever",
-            age: 2,
-            gender: .female,
-            imageName: "dog",
-            weight: 25,
-            height: 55,
-            color: "Black"
-        ),
-        PetModel(
-            name: "Max",
-            breed: "Beagle",
-            age: 4,
-            gender: .male,
-            imageName: "dog",
-            weight: 20,
-            height: 50,
-            color: "Wight"
-        ),
-        PetModel(
-            name: "Lucy",
-            breed: "Poodle",
-            age: 5,
-            gender: .female,
-            imageName: "dog",
-            weight: 22,
-            height: 45,
-            color: "Ginger"
-        )
-    ]
+    @StateObject private var viewModel = HomeViewModel()
 
     var body: some View {
         NavigationView {
@@ -72,14 +30,16 @@ struct HomeSwiftUIView: View {
                     }
                     .padding()
                     .sheet(isPresented: $isAddPetPagePresented) {
-                        AddPetUIView()
+                        AddPetUIView(onPetAdded: {
+                            viewModel.fetchPets() 
+                        })
                     }
                 }
                 .padding()
                 
                 ScrollView {
                     VStack(spacing: 20) {
-                        ForEach(pets, id: \.name) { pet in
+                        ForEach(viewModel.pets, id: \.name) { pet in
                             NavigationLink(destination: PetProfileUIView(pet: pet)) {
                                 PetCardView(pet: pet)
                             }
@@ -91,6 +51,9 @@ struct HomeSwiftUIView: View {
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
+        .onAppear {
+            viewModel.fetchPets()
+        }
     }
 }
 

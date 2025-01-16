@@ -11,16 +11,33 @@ struct PetProfileUIView: View {
     
     var pet: PetModel
     @Environment(\.presentationMode) var presentationMode
-
+    @StateObject private var viewModel = PetProfileViewModel()
+    
     var body: some View {
         NavigationView {
             VStack {
-                Image(pet.imageName)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(height: 400)
-                    .clipShape(RoundedRectangle(cornerRadius: 0))
-                    .ignoresSafeArea()
+                if viewModel.isLoading {
+                    ProgressView("Loading Image...")
+                        .frame(height: 400)
+                        .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                        .padding(.top, 20)
+                } else if let petImage = viewModel.petImage {
+                    Image(uiImage: petImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 400)
+                        .clipShape(RoundedRectangle(cornerRadius: 0))
+                        .ignoresSafeArea()
+                } else {
+                    Image(systemName: "photo")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 400)
+                        .foregroundColor(.gray)
+                        .clipShape(RoundedRectangle(cornerRadius: 0))
+                        .ignoresSafeArea()
+                }
+                
                 MainInfoUIView(pet: pet)
                     .padding(.horizontal)
                     .padding(.top, -155)
@@ -29,6 +46,7 @@ struct PetProfileUIView: View {
                             .opacity(0.55)
                             .cornerRadius(27)
                     )
+                
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
                         Image(.petPaw)
@@ -48,6 +66,9 @@ struct PetProfileUIView: View {
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: backButton)
         .navigationTitle("")
+        .onAppear {
+            viewModel.fetchPetImage(imageURLString: pet.imageName) 
+        }
     }
     
     private var backButton: some View {
@@ -61,6 +82,7 @@ struct PetProfileUIView: View {
         }
     }
 }
+
 
 
 #Preview {
