@@ -8,6 +8,8 @@
 import Foundation
 
 struct UserModel {
+    let uID: String
     let userName: String
     let email: String
+    var pets: [PetModel] = []
 }

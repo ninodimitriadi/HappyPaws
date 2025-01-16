@@ -10,6 +10,8 @@ import PhotosUI
 
 struct AddPetUIView: View {
     @StateObject private var viewModel = AddPetViewModel()
+    @Environment(\.dismiss) private var dismiss
+    var onPetAdded: (() -> Void)?
     
     var body: some View {
         ZStack {
@@ -54,11 +56,14 @@ struct AddPetUIView: View {
                             CustomTextField(placeholder: "Pet Weight (kg)", text: $viewModel.petWeight, keyboardType: .decimalPad)
                             CustomTextField(placeholder: "Pet Height (cm)", text: $viewModel.petHeight, keyboardType: .decimalPad)
                             CustomTextField(placeholder: "Pet Color", text: $viewModel.petColor)
-                            CustomTextField(placeholder: "Image Name", text: $viewModel.imageName)
                         }
                         .padding(.horizontal, 20)
                         Button(action: {
-                            viewModel.savePet()
+                            viewModel.savePet { success in
+                                if success {
+                                    onPetAdded?()
+                                }
+                            }
                         }) {
                             Text("Save Pet")
                                 .font(.headline)
