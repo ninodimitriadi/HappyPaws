@@ -38,7 +38,7 @@ struct MainInfoUIView: View {
         .frame(maxWidth: .infinity)
         .padding()
         .background(
-            BlurView(style: .systemMaterial)
+            BlurView(style: .systemMaterialLight)
                 .opacity(1)
                 .cornerRadius(27)
         )
