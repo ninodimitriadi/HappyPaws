@@ -11,4 +11,6 @@ struct DoctorModel {
     var experience: Int
     var phoneNimber: String
     let image: String
+    let info: String
+    var rating: Double
 }

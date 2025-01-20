@@ -6,71 +6,116 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct VetClinicDetailUIView: View {
     let clinic: ClinicModel
     @Environment(\.presentationMode) var presentationMode
-
+    
     var body: some View {
-        VStack(spacing: 20) {
-            HStack {
+        NavigationView {
+            ZStack(alignment: .topLeading) {
+                VStack(spacing: 0) {
+                    AsyncImage(url: URL(string: clinic.image)) { phase in
+                        switch phase {
+                        case .empty:
+                            Color.gray
+                                .frame(height: 200)
+                                .overlay(
+                                    ProgressView()
+                                )
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: 200)
+                                .clipped()
+                        case .failure:
+                            Color.gray
+                                .frame(height: 200)
+                                .overlay(
+                                    Text("Failed to load image")
+                                        .foregroundColor(.white)
+                                )
+                        @unknown default:
+                            EmptyView()
+                        }
+                    }
+                    
+                    VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 15) {
+                            HStack {
+                                Text(clinic.title ?? "Clinic")
+                                    .font(Font.custom("Poppins-Bold", size: 24))
+                                    .foregroundStyle(Color.black)
+                                Spacer()
+                                Text("⭐️ \(clinic.rating, specifier: "%.1f")")
+                                    .font(.subheadline)
+                            }
+                            
+                            HStack {
+                                Image("address")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 15, height: 18)
+                                Text(clinic.address)
+                                    .font(.subheadline)
+                            }
+                            HStack {
+                                Image("telephone")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 15, height: 17)
+                                Text(clinic.clinicPhoneNumber)
+                                    .font(.subheadline)
+                            }
+                            
+                            Text("Our Doctors")
+                                .font(.headline)
+                                .padding(.top, 10)
+                        }
+                        .padding(15)
+                        
+                        ScrollView {
+                            VStack(spacing: 20) {
+                                ForEach(clinic.doctors, id: \.phoneNimber) { doctor in
+                                    NavigationLink(destination: DoctorProfileUIView(doctor: doctor)) {
+                                        CustomDoctorUiView(doctor: doctor)
+                                    }
+                                }
+                            }
+                            .padding(15)
+                        }
+                    }
+                }
+                
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }) {
-                    Image(systemName: "chevron.backward")
-                        .font(.body)
+                    Image(systemName: "chevron.left")
+                        .frame(width: 30, height: 30)
                         .foregroundColor(.black)
-                        .padding(.leading, 30)
+                        .padding()
+                        .padding(.top, 50)
                 }
-                Spacer()
             }
-            Image(clinic.image)
-                 .resizable()
-                 .scaledToFit()
-                 .frame(height: 200)
-             
-             // Clinic Title
-             Text(clinic.title ?? "Clinic")
-                 .font(.title)
-                 .padding()
-
-             // Address
-             Text("Address: \(clinic.address)")
-                 .font(.subheadline)
-                 .padding()
-
-             // Rating
-             Text("Rating: ⭐️ \(clinic.rating)")
-                 .font(.subheadline)
-                 .padding()
-
-             // Phone Number
-             Text("Phone: \(clinic.clinicPhoneNumber)")
-                 .font(.subheadline)
-                 .padding()
-
-             // Doctors list
-             VStack {
-                 Text("Doctors")
-                     .font(.headline)
-                 ForEach(clinic.doctors, id: \.name) { doctor in
-                     VStack {
-                         Text(doctor.name)
-                             .font(.subheadline)
-                         Text("Experience: \(doctor.experience) years")
-                             .font(.subheadline)
-                         Text("Status: \(doctor.status)")
-                             .font(.subheadline)
-                     }
-                     .padding()
-                 }
-             }
-         }
-        .padding()
+            .edgesIgnoringSafeArea(.top)
+        }
     }
 }
 
 
-//#Preview {
-//    VetClinicDetailUIView()
-//}
+
+
+
+#Preview {
+    VetClinicDetailUIView(clinic: ClinicModel(
+        address: "5 Freedom Square, Tbilisi, Georgia",
+        coordinate: CLLocationCoordinate2D(latitude: 41.7151, longitude: 44.8271),
+        title: "Tbilisi Vet Clinic",
+        clinicPhoneNumber: "+995 599 123 456",
+        rating: 4.5,
+        doctors: [DoctorModel(name: "Dr. George Smith", status: "Surgeon", experience: 10, phoneNimber: "+995 555 123 456", image: "doctor1", info: "very good doctot",  rating: 4.6), DoctorModel(name: "Dr. George Smith", status: "Terapevt", experience: 10, phoneNimber: "+995 555 123 456", image: "doctor1", info: "very good doctot", rating: 5.0)],
+        image: "vetClinic"
+    ))
+}

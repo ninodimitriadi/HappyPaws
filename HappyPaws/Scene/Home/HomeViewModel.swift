@@ -5,35 +5,6 @@
 //  Created by nino on 1/16/25.
 //
 
-//import Foundation
-//import Combine
-//
-//class HomeViewModel: ObservableObject {
-//    @Published var pets: [PetModel] = [] // Pets array
-//    @Published var errorMessage: String? = nil // Error handling
-//    
-//    private let authService = AuthService.shared
-//    
-//    init() {
-//        fetchPets()
-//    }
-//    
-//    func fetchPets() {
-//        authService.fetchUser { [weak self] user, error in
-//            DispatchQueue.main.async {
-//                if let error = error {
-//                    self?.errorMessage = error.localizedDescription
-//                } else if let user = user {
-//                    self?.pets = user.pets
-//                } else {
-//                    self?.errorMessage = "Failed to fetch user data."
-//                }
-//            }
-//        }
-//    }
-//}
-
-
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage

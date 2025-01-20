@@ -59,7 +59,10 @@ class VetClinicViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     // MARK: - Add Clinic Pins
     private func addClinicPins() {
         viewModel.fetchClinics { [weak self] clinics in
-            self?.mapView.addAnnotations(clinics)
+            print("Fetched clinics: \(clinics.count)")
+            DispatchQueue.main.async {
+                self?.mapView.addAnnotations(clinics)
+            }
         }
     }
 
@@ -69,8 +72,8 @@ class VetClinicViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         userLocation = location
         let region = MKCoordinateRegion(
             center: location.coordinate,
-            latitudinalMeters: 15000,
-            longitudinalMeters: 15000
+            latitudinalMeters: 30000,
+            longitudinalMeters: 30000
         )
         mapView.setRegion(region, animated: true)
         locationManager.stopUpdatingLocation()
@@ -79,21 +82,22 @@ class VetClinicViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     // MARK: - MKMapViewDelegate
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard !(annotation is MKUserLocation) else { return nil }
-        
+        guard annotation is ClinicModel else { return nil }
+
         let identifier = "ClinicPin"
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
         if annotationView == nil {
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            annotationView?.canShowCallout = false
+            annotationView?.canShowCallout = true
+            annotationView?.image = UIImage(named: "hospitalPin") // Update with your pin image
+            annotationView?.frame.size = CGSize(width: 50, height: 50)
         } else {
             annotationView?.annotation = annotation
         }
-        
-        annotationView?.image = UIImage(named: "hospitalPin")
-        annotationView?.frame.size = CGSize(width: 50, height: 50)
-        
+
         return annotationView
     }
+
 
     func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation) {
         guard let clinicModel = annotation as? ClinicModel else { return }
