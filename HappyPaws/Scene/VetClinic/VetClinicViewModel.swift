@@ -5,68 +5,87 @@
 //  Created by nino on 1/18/25.
 //
 
+import Firebase
 import CoreLocation
 
 class VetClinicViewModel {
+    private let db = Firestore.firestore()
     private(set) var clinics: [ClinicModel] = []
 
     func fetchClinics(completion: @escaping ([ClinicModel]) -> Void) {
-        // Doctor data for clinics
-        let doctor1 = DoctorModel(name: "Dr. George Smith", status: "Available", experience: 10, phoneNimber: "+995 555 123 456", image: "doctor1.jpg")
-        let doctor2 = DoctorModel(name: "Dr. Anna Johnson", status: "On Leave", experience: 5, phoneNimber: "+995 555 654 321", image: "doctor2.jpg")
-        let doctor3 = DoctorModel(name: "Dr. Michael Brown", status: "Available", experience: 8, phoneNimber: "+995 555 987 654", image: "doctor3.jpg")
-        let doctor4 = DoctorModel(name: "Dr. Laura Williams", status: "Available", experience: 12, phoneNimber: "+995 555 246 810", image: "doctor4.jpg")
+        db.collection("vetClinic").getDocuments { snapshot, error in
+            if let error = error {
+                print("Error fetching clinics: \(error.localizedDescription)")
+                completion([])
+                return
+            }
+            
+            guard let documents = snapshot?.documents else {
+                print("No clinic data found")
+                completion([])
+                return
+            }
 
-        // Clinic data for Tbilisi
-        let clinic1 = ClinicModel(
-            address: "5 Freedom Square, Tbilisi, Georgia",
-            coordinate: CLLocationCoordinate2D(latitude: 41.7151, longitude: 44.8271),
-            title: "Tbilisi Vet Clinic",
-            clinicPhoneNumber: "+995 599 123 456",
-            rating: 4.5,
-            doctors: [doctor1, doctor2],
-            image: "clinic1.jpg"
-        )
+            var fetchedClinics: [ClinicModel] = []
 
-        let clinic2 = ClinicModel(
-            address: "3 Rustaveli Ave, Tbilisi, Georgia",
-            coordinate: CLLocationCoordinate2D(latitude: 41.7244, longitude: 44.7923),
-            title: "Friendly Vet Center",
-            clinicPhoneNumber: "+995 599 654 321",
-            rating: 4.7,
-            doctors: [doctor3, doctor4],
-            image: "clinic2.jpg"
-        )
+            for document in documents {
+                let data = document.data()
 
-        let clinic3 = ClinicModel(
-            address: "7 Abashidze St, Tbilisi, Georgia",
-            coordinate: CLLocationCoordinate2D(latitude: 41.7225, longitude: 44.7812),
-            title: "Happy Paws Veterinary",
-            clinicPhoneNumber: "+995 599 789 123",
-            rating: 3.9,
-            doctors: [doctor1, doctor3],
-            image: "clinic3.jpg"
-        )
+                guard
+                    let address = data["address"] as? String,
+                    let coordinateData = data["coordinate"] as? GeoPoint,
+                    let title = data["title"] as? String,
+                    let clinicPhoneNumber = data["clinicPhoneNumber"] as? String,
+                    let rating = data["rating"] as? Double,
+                    let image = data["image"] as? String,
+                    let doctorArray = data["doctor"] as? [[String: Any]]
+                else {
+                    print("Invalid data in document: \(document.documentID)")
+                    continue
+                }
 
-        let clinic4 = ClinicModel(
-            address: "9 Chavchavadze Ave, Tbilisi, Georgia",
-            coordinate: CLLocationCoordinate2D(latitude: 41.7237, longitude: 44.7985),
-            title: "Pets Care Clinic",
-            clinicPhoneNumber: "+995 599 321 789",
-            rating: 4.2,
-            doctors: [doctor2, doctor4],
-            image: "clinic4.jpg"
-        )
+                let coordinate = CLLocationCoordinate2D(latitude: coordinateData.latitude, longitude: coordinateData.longitude)
 
-        let fetchedClinics = [clinic1, clinic2, clinic3, clinic4]
-        
-        self.clinics = fetchedClinics
-        
-        DispatchQueue.main.async {
-            completion(fetchedClinics)
+                // Parse doctors
+                var doctors: [DoctorModel] = []
+                for doctorData in doctorArray {
+                    guard
+                        let name = doctorData["name"] as? String,
+                        let status = doctorData["status"] as? String,
+                        let experience = doctorData["experience"] as? Int,
+                        let phoneNimber = doctorData["phoneNimber"] as? String,
+                        let doctorImage = doctorData["image"] as? String,
+                        let info = doctorData["info"] as? String,
+                        let rating = doctorData["rating"] as? Double
+                    else {
+                        print("Invalid doctor data in clinic: \(title)")
+                        continue
+                    }
+
+                    let doctor = DoctorModel(name: name, status: status, experience: experience, phoneNimber: phoneNimber, image: doctorImage, info: info, rating: rating)
+                    doctors.append(doctor)
+                }
+
+                // Create ClinicModel
+                let clinic = ClinicModel(
+                    address: address,
+                    coordinate: coordinate,
+                    title: title,
+                    clinicPhoneNumber: clinicPhoneNumber,
+                    rating: rating,
+                    doctors: doctors,
+                    image: image
+                )
+
+                fetchedClinics.append(clinic)
+            }
+
+            self.clinics = fetchedClinics
+            DispatchQueue.main.async {
+                completion(fetchedClinics)
+            }
         }
     }
-
 
     func distanceFromUser(to clinic: ClinicModel, userLocation: CLLocation) -> String {
         let clinicLocation = CLLocation(latitude: clinic.coordinate.latitude, longitude: clinic.coordinate.longitude)
