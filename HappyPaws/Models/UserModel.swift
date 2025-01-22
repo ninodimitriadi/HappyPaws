@@ -11,5 +11,6 @@ struct UserModel {
     let uID: String
     let userName: String
     let email: String
+    let profileImage: URL?
     var pets: [PetModel] = []
 }

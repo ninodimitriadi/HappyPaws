@@ -56,7 +56,7 @@ struct CustomDoctorUiView: View {
                 Text("\(doctor.status)")
                     .font(Font.custom("Poppins-LightItalic", size: 15))
                     .foregroundStyle(.black)
-                Text("Experience: \(doctor.experience) year(s)")
+                Text("Experience: \(doctor.experience) year")
                     .font(Font.custom("Poppins-Regular", size: 15))
                     .foregroundStyle(.black)
             }

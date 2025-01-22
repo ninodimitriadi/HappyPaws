@@ -38,7 +38,15 @@ class TabBarViewController: UITabBarController {
             tag: 3
         )
         
-        self.viewControllers = [swiftUIHomeVC, vetClinicVC, groomingSalonVC]
+        let userProfileVC = UserProfileViewController()
+        userProfileVC.tabBarItem = configureTabBarItem(
+            title: "Profile",
+            image: resizeImage(image: UIImage(systemName: "person"), to: CGSize(width: 25, height: 25)),
+            tag: 4
+        )
+        
+        self.viewControllers = [swiftUIHomeVC, vetClinicVC, groomingSalonVC, userProfileVC]
+        self.selectedIndex = 0
         
         customizeTabBarAppearance()
     }
@@ -91,6 +99,4 @@ class TabBarViewController: UITabBarController {
     }
 
 }
-
-
 
