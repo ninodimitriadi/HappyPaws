@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
+import FirebaseStorage
 
 class AuthService {
     
@@ -102,9 +103,13 @@ class AuthService {
                 return
             }
             
-            // Parse pets array if it exists
+            // Safely handle profileImageURL as an optional URL
+            let profileImageURL = URL(string: data["profileImageURL"] as? String ?? "")
+            
+            // Safely handle pets data, skip invalid pets
             var pets: [PetModel] = []
             if let petsData = data["pets"] as? [[String: Any]] {
+                // Use compactMap to skip invalid pets
                 pets = petsData.compactMap { petDict in
                     guard let name = petDict["name"] as? String,
                           let breed = petDict["breed"] as? String,
@@ -115,8 +120,10 @@ class AuthService {
                           let weight = petDict["weight"] as? Int,
                           let height = petDict["height"] as? Int,
                           let color = petDict["color"] as? String else {
+                        // Skip invalid pet
                         return nil
                     }
+                    // Return a valid PetModel if all required fields are present
                     return PetModel(
                         name: name,
                         breed: breed,
@@ -130,9 +137,55 @@ class AuthService {
                 }
             }
             
-            // Create UserModel with pets
-            let user = UserModel(uID: uid, userName: username, email: email, pets: pets)
+            // Now safely initialize UserModel
+            let user = UserModel(uID: uid, userName: username, email: email, profileImage: profileImageURL, pets: pets)
             completion(user, nil)
+        }
+    }
+
+
+
+    public func uploadProfileImage(_ image: UIImage, completion: @escaping (URL?, Error?) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            completion(nil, NSError(domain: "AuthService", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not logged in"]))
+            return
+        }
+        
+        let storageRef = Storage.storage().reference().child("profile_images/\(currentUser.uid).jpg")
+        
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            completion(nil, NSError(domain: "AuthService", code: 400, userInfo: [NSLocalizedDescriptionKey: "Invalid image data"]))
+            return
+        }
+        
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
+        
+        storageRef.putData(imageData, metadata: metadata) { _, error in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
+            storageRef.downloadURL { url, error in
+                if let error = error {
+                    completion(nil, error)
+                    return
+                }
+                completion(url, nil)
+            }
+        }
+    }
+    
+    public func updateProfileImageURL(_ url: URL, completion: @escaping (Error?) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            completion(NSError(domain: "AuthService", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not logged in"]))
+            return
+        }
+        
+        let db = Firestore.firestore()
+        db.collection("users").document(currentUser.uid).updateData(["profileImageURL": url.absoluteString]) { error in
+            completion(error)
         }
     }
 }
