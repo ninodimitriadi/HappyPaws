@@ -101,13 +101,12 @@ class VetClinicViewController: UIViewController, MKMapViewDelegate, CLLocationMa
 
     func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation) {
         guard let clinicModel = annotation as? ClinicModel else { return }
-        
-        // Store the selected clinic
+
         selectedClinic = clinicModel
         
-        // Configure the callout view with the clinic data
         calloutView.configure(
-            vetClinic: clinicModel,
+            name: clinicModel.title ?? "N/A",
+            rating: clinicModel.rating,
             distance: calculateDistance(to: clinicModel),
             clinicNumber: clinicModel.clinicPhoneNumber
         )
