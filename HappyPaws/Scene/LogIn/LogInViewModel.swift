@@ -48,6 +48,7 @@ class LogInViewModel {
         
         AuthService.shared.signIn(with: loginRequest) { error in
             if let error = error {
+                print("erororor")
                 completion(false, error.localizedDescription)
             } else {
                 completion(true, nil)

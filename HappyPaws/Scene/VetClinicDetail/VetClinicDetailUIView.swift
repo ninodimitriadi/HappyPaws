@@ -52,7 +52,7 @@ struct VetClinicDetailUIView: View {
                                 Text("⭐️ \(clinic.rating, specifier: "%.1f")")
                                     .font(.subheadline)
                             }
-                            
+
                             HStack {
                                 Image("address")
                                     .resizable()

@@ -14,7 +14,6 @@ struct DoctorProfileUIView: View {
     var body: some View {
         NavigationView {
             VStack {
-                // Load image from URL using AsyncImage
                 AsyncImage(url: URL(string: doctor.image)) { phase in
                     switch phase {
                     case .empty:

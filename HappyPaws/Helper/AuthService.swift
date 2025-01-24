@@ -58,6 +58,7 @@ class AuthService {
         ) { result, error in
             if let error = error {
                 completion(error)
+                print(error)
                 return
             } else {
                 completion(nil)

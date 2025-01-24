@@ -95,12 +95,14 @@ class CustomCalloutView: UIView {
         }
     }
 
-    func configure(vetClinic: ClinicModel, distance: String, clinicNumber: String) {
-        nameLabel.text = vetClinic.title
-        distanceLabel.text = distance
-        phoneLabel.text = "📞 \(clinicNumber)"
-        clinicPhoneNumber = clinicNumber
-        ratingLabel.text = "⭐️ \(vetClinic.rating)"
+    func configure(name: String, rating: Double, distance: String, clinicNumber: String) {
+        DispatchQueue.main.async { [weak self] in
+            self?.nameLabel.text = name
+            self?.distanceLabel.text = distance
+            self?.phoneLabel.text = "📞 \(clinicNumber)"
+            self?.clinicPhoneNumber = clinicNumber
+            self?.ratingLabel.text = "⭐️ \(rating)"
+        }
     }
 }
 

@@ -41,9 +41,11 @@
 		<string>Poppins-LightItalic.ttf</string>
 		<string>Inter.ttf</string>
 	</array>
+	<key>GMSAPIKey</key>
+	<string>AIzaSyBvmsKJffm7UV5iV9oqJ5BMZxAhb7Q-K1U</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to show nearby vet clinics.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We need your location to show nearby vet clinics.</string>
+	<string>We need your location to show nearby grooming salons</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need your location to show nearby grooming salons</string>
 </dict>
 </plist>
