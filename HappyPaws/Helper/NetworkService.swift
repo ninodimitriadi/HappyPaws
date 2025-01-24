@@ -27,11 +27,10 @@ class NetworkService {
             }
 
             do {
-                // Parse JSON and print it
                 if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                    let results = json["results"] as? [[String: Any]] {
                     print("api key ", self.apiKey)
-                    print("API Response: \(json)") // Debugging line
+                    print("API Response: \(json)")
 
                     var salons: [GroomingSalonModel] = []
                     for result in results {
@@ -44,7 +43,7 @@ class NetworkService {
                             continue
                         }
                         
-                        salons.append(GroomingSalonModel(placeID: placeID, name: name, coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lng), phoneNumber: result["phone_number"] as? String ?? "sndkjsdnfk", rating: result["rating"] as? Double ?? 0))
+                        salons.append(GroomingSalonModel(placeID: placeID, name: name, coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lng), phoneNumber: result["phone_number"] as? String ?? "nill", rating: result["rating"] as? Double ?? 0))
                     }
                     completion(salons)
                 } else {

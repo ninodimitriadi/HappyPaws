@@ -8,6 +8,7 @@
 import UIKit
 import MapKit
 import CoreLocation
+import SwiftUI
 
 class GroomingSalonViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     private let mapView = MKMapView()
@@ -15,6 +16,8 @@ class GroomingSalonViewController: UIViewController, MKMapViewDelegate, CLLocati
     private let calloutView = CustomCalloutView()
     private let locationManager = CLLocationManager()
     private var userLocation: CLLocation?
+    private var selectedSalon: GroomingSalonModel?
+    private var selectedSalonDetail: SalonDetailsModel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,14 +40,14 @@ class GroomingSalonViewController: UIViewController, MKMapViewDelegate, CLLocati
             mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
 
-        print("MapView added successfully") // Debugging line
+        print("MapView added successfully")
     }
 
     func setupLocationManager() {
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
-        print("Location Manager Started") // Debugging line
+        print("Location Manager Started")
     }
 
     private func bindViewModel() {
@@ -77,9 +80,29 @@ class GroomingSalonViewController: UIViewController, MKMapViewDelegate, CLLocati
     private func setupCalloutView() {
         calloutView.frame = CGRect(x: 20, y: view.frame.height - 250, width: view.frame.width - 40, height: 120)
         calloutView.isHidden = true
+        calloutView.onTap = { [weak self] in
+            self?.navigateSalonDetail()
+        }
 
         view.addSubview(calloutView)
     }
+    
+    private func navigateSalonDetail() {
+        guard let selectedSalon = selectedSalon, let selectedSalonDetail = selectedSalonDetail else {
+            print("Missing salon or salon details for navigation.")
+            return
+        }
+        
+        let groomingDetailView = NavigationView {
+            GroomingDetailsUIView(salon: selectedSalon, salonDetail: selectedSalonDetail)
+        }
+
+        let hostingController = UIHostingController(rootView: groomingDetailView)
+        hostingController.modalPresentationStyle = .fullScreen
+        present(hostingController, animated: true)
+    }
+
+
 
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard let customAnnotation = annotation as? CustomAnnotation else { return nil }
@@ -102,21 +125,26 @@ class GroomingSalonViewController: UIViewController, MKMapViewDelegate, CLLocati
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         guard let customAnnotation = view.annotation as? CustomAnnotation else { return }
 
-        let salonPlaceID = customAnnotation.salonDetails.placeID 
+        let salonPlaceID = customAnnotation.salonDetails.placeID
 
         viewModel.fetchSalonDetails(placeID: salonPlaceID) { [weak self] salonDetails in
             guard let self = self else { return }
 
+            DispatchQueue.main.async {
                 if let salonDetails = salonDetails {
+                    self.selectedSalon = customAnnotation.salonDetails
+                    self.selectedSalonDetail = salonDetails
+
                     self.calloutView.configure(
                         name: customAnnotation.salonDetails.name,
                         rating: customAnnotation.salonDetails.rating,
                         distance: self.calculateDistance(to: customAnnotation.salonDetails),
                         clinicNumber: salonDetails.phoneNumber
                     )
-                    DispatchQueue.main.async { [weak self] in
-                        self?.calloutView.isHidden = false
-                    }
+                    self.calloutView.isHidden = false
+                } else {
+                    print("Failed to fetch salon details for placeID: \(salonPlaceID)")
+                }
             }
         }
     }
