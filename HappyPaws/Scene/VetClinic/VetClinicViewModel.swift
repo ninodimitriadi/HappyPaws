@@ -66,7 +66,6 @@ class VetClinicViewModel {
                     doctors.append(doctor)
                 }
 
-                // Create ClinicModel
                 let clinic = ClinicModel(
                     address: address,
                     coordinate: coordinate,

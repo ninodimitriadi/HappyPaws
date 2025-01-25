@@ -62,6 +62,7 @@ struct AddPetUIView: View {
                             viewModel.savePet { success in
                                 if success {
                                     onPetAdded?()
+                                    dismiss()
                                 }
                             }
                         }) {
