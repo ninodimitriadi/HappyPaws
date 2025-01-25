@@ -99,6 +99,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         resetPasswordButton.addTarget(self, action: #selector(resetPassword), for: .touchUpInside)
         logoutButton.addTarget(self, action: #selector(logout), for: .touchUpInside)
         saveButton.addTarget(self, action: #selector(saveProfile), for: .touchUpInside)
+        remindersButton.addTarget(self, action: #selector(navigateToReminder), for: .touchUpInside)
     }
     
     private func setUpConstraints() {
@@ -149,9 +150,13 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
             self?.present(alert, animated: true, completion: nil)
         }
         
-        viewModel.onLogoutSuccess = { [weak self] in
+        viewModel.onLogoutSuccess = { 
             let loginVC = LogInViewController()
-            self?.navigationController?.setViewControllers([loginVC], animated: false)
+            if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+                let navController = UINavigationController(rootViewController: loginVC)
+                sceneDelegate.window?.rootViewController = navController
+                sceneDelegate.window?.makeKeyAndVisible()
+            }
         }
     }
     
@@ -179,7 +184,13 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         let forgetPasswordVC = ForgetPasswordViewController()
         self.navigationController?.pushViewController(forgetPasswordVC, animated: true)
     }
-
+    
+    @objc private func navigateToReminder() {
+        let reminderListView = ReminderListView()
+        let hostingController = UIHostingController(rootView: reminderListView)
+        
+        self.navigationController?.pushViewController(hostingController, animated: true)
+    }
     @objc private func logout() {
         let alert = UIAlertController(title: "Are you sure?",
                                       message: "Do you really want to log out?",

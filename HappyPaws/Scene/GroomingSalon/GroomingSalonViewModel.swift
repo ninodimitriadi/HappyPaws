@@ -15,16 +15,16 @@ class GroomingSalonViewModel {
 
     func fetchNearbySalons(location: CLLocationCoordinate2D, radius: Int) {
         let locationString = "\(location.latitude),\(location.longitude)"
-        print("Fetching salons for location: \(locationString)") // Debugging line
+        print("Fetching salons for location: \(locationString)")
         
         networkService.fetchNearbySalons(location: locationString, radius: radius) { [weak self] salons in
             guard let self = self else { return }
             if let salons = salons {
-                print("Fetched salons: \(salons)") // Debugging line
+                print("Fetched salons: \(salons)")
                 self.salons = salons
                 self.onSalonsUpdated?()
             } else {
-                print("No salons found.") // Debugging line
+                print("No salons found.")
             }
         }
     }

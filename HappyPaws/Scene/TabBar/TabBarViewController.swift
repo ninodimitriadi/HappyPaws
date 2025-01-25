@@ -18,36 +18,42 @@ class TabBarViewController: UITabBarController {
 
     private func setupTabBar() {
         let swiftUIHomeVC = UIHostingController(rootView: HomeSwiftUIView())
-        swiftUIHomeVC.tabBarItem = configureTabBarItem(
+        let homeNavController = UINavigationController(rootViewController: swiftUIHomeVC)
+        homeNavController.isNavigationBarHidden = false
+        homeNavController.tabBarItem = configureTabBarItem(
             title: "Home",
             image: UIImage(systemName: "pawprint.fill"),
             tag: 1
         )
-        
+
         let vetClinicVC = VetClinicViewController()
-        vetClinicVC.tabBarItem = configureTabBarItem(
+        let vetNavController = UINavigationController(rootViewController: vetClinicVC)
+        vetNavController.tabBarItem = configureTabBarItem(
             title: "Health",
             image: resizeImage(image: UIImage(systemName: "stethoscope"), to: CGSize(width: 25, height: 25)),
             tag: 2
         )
-        
+
         let groomingSalonVC = GroomingSalonViewController()
-        groomingSalonVC.tabBarItem = configureTabBarItem(
+        let groomingNavController = UINavigationController(rootViewController: groomingSalonVC)
+        groomingNavController.tabBarItem = configureTabBarItem(
             title: "Grooming",
             image: resizeImage(image: UIImage(named: "grooming"), to: CGSize(width: 25, height: 25)),
             tag: 3
         )
-        
+
         let userProfileVC = UserProfileViewController()
-        userProfileVC.tabBarItem = configureTabBarItem(
+        let profileNavController = UINavigationController(rootViewController: userProfileVC)
+        profileNavController.isNavigationBarHidden = true
+        profileNavController.tabBarItem = configureTabBarItem(
             title: "Profile",
-            image: resizeImage(image: UIImage(systemName: "person"), to: CGSize(width: 25, height: 25)),
+            image: UIImage(systemName: "person"),
             tag: 4
         )
-        
-        self.viewControllers = [swiftUIHomeVC, vetClinicVC, groomingSalonVC, userProfileVC]
+
+        self.viewControllers = [homeNavController, vetNavController, groomingNavController, profileNavController]
         self.selectedIndex = 0
-        
+
         customizeTabBarAppearance()
     }
     
@@ -94,9 +100,8 @@ class TabBarViewController: UITabBarController {
             self.tabBar.layer.borderColor = UIColor.lightGray.cgColor
         }
         
-        self.tabBar.isTranslucent = false
+        self.tabBar.isTranslucent = true
         self.tabBar.clipsToBounds = false
     }
-
 }
 

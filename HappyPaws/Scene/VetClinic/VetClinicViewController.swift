@@ -56,7 +56,6 @@ class VetClinicViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         present(hostingController, animated: true, completion: nil)
     }
 
-    // MARK: - Add Clinic Pins
     private func addClinicPins() {
         viewModel.fetchClinics { [weak self] clinics in
             print("Fetched clinics: \(clinics.count)")
@@ -66,7 +65,6 @@ class VetClinicViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         }
     }
 
-    // MARK: - CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else { return }
         userLocation = location
@@ -79,7 +77,6 @@ class VetClinicViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         locationManager.stopUpdatingLocation()
     }
 
-    // MARK: - MKMapViewDelegate
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard !(annotation is MKUserLocation) else { return nil }
         guard annotation is ClinicModel else { return nil }

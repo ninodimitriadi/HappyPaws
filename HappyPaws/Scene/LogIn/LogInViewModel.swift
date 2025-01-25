@@ -75,7 +75,6 @@ class LogInViewModel {
                 return
             }
 
-            // Retrieve the authentication and token
             let user = result.user
             guard let idToken = user.idToken?.tokenString else {
                 completion(false, "ID Token not found.")
@@ -84,10 +83,8 @@ class LogInViewModel {
 
             let accessToken = user.accessToken.tokenString
 
-            // Create a Google credential
             let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
 
-            // Authenticate with Firebase
             Auth.auth().signIn(with: credential) { authResult, error in
                 if let error = error {
                     completion(false, error.localizedDescription)

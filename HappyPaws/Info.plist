@@ -47,5 +47,13 @@
 	<string>We need your location to show nearby grooming salons</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>We need your location to show nearby grooming salons</string>
+    <key>NSCalendarsUsageDescription</key>
+    <string>This app requires access to the calendar to manage your events.</string>
+    <key>NSRemindersUsageDescription</key>
+    <string>We need access to your reminders to notify you about your pet's reminders.</string>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+    </array>
 </dict>
 </plist>

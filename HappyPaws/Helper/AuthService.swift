@@ -104,10 +104,8 @@ class AuthService {
                 return
             }
             
-            // Safely handle profileImageURL as an optional URL
             let profileImageURL = URL(string: data["profileImageURL"] as? String ?? "")
             
-            // Safely handle pets data, skip invalid pets
             var pets: [PetModel] = []
             if let petsData = data["pets"] as? [[String: Any]] {
                 // Use compactMap to skip invalid pets
@@ -121,10 +119,8 @@ class AuthService {
                           let weight = petDict["weight"] as? Int,
                           let height = petDict["height"] as? Int,
                           let color = petDict["color"] as? String else {
-                        // Skip invalid pet
                         return nil
                     }
-                    // Return a valid PetModel if all required fields are present
                     return PetModel(
                         name: name,
                         breed: breed,
@@ -138,7 +134,6 @@ class AuthService {
                 }
             }
             
-            // Now safely initialize UserModel
             let user = UserModel(uID: uid, userName: username, email: email, profileImage: profileImageURL, pets: pets)
             completion(user, nil)
         }
