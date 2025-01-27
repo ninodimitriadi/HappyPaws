@@ -48,7 +48,9 @@ struct HomeSwiftUIView: View {
                     .padding(15)
                 }
             }
+            .background(Color.backgroundGray)
         }
+        .ignoresSafeArea()
         .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
         .onAppear {

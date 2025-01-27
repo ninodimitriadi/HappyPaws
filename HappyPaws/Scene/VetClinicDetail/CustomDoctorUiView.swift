@@ -71,6 +71,7 @@ struct CustomDoctorUiView: View {
 #Preview {
     CustomDoctorUiView(
         doctor: DoctorModel(
+            id: "1",
             name: "Dr. Laura Williams",
             status: "Senior Surgeon",
             experience: 12,

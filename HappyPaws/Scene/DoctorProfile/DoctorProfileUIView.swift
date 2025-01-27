@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct DoctorProfileUIView: View {
+    
     var doctor: DoctorModel
+    @StateObject private var viewModel = DoctorProfileViewModel()
+    @State private var showBookingView = false
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
@@ -77,7 +80,7 @@ struct DoctorProfileUIView: View {
                 .padding(15)
                 
                 Button(action: {
-                    print("Book Appointment tapped")
+                    showBookingView.toggle()
                 }) {
                     Text("Book Appointment")
                         .font(.headline)
@@ -88,6 +91,9 @@ struct DoctorProfileUIView: View {
                 }
                 .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 3)
                 .padding(.top, 15)
+                .sheet(isPresented: $showBookingView) {
+                    BookAppointmentView(doctor: doctor, viewModel: viewModel)
+                }
                 
                 Spacer()
             }
@@ -109,17 +115,17 @@ struct DoctorProfileUIView: View {
     }
 }
 
-#Preview {
-    DoctorProfileUIView(
-        doctor: DoctorModel(
-            name: "Dr. George Smith",
-            status: "Surgeon",
-            experience: 10,
-            phoneNimber: "+995 555 123 456",
-            image: "https://firebasestorage.googleapis.com/v0/b/happypaws-f5ad3.firebasestorage.app/o/doctors%2Fsalome.avif?alt=media&token=57f0aba9-f818-4af2-b8c8-f0892cc5df72",
-            info: "კესო კერესელიძე #აიბოსგუნდის ფართო პროფილის ექიმი-ვეტერინარი და ინფექციონისტია.",
-            rating: 4.6
-        )
-    )
-}
+//#Preview {
+//    DoctorProfileUIView(
+//        doctor: DoctorModel(
+//            name: "Dr. George Smith",
+//            status: "Surgeon",
+//            experience: 10,
+//            phoneNimber: "+995 555 123 456",
+//            image: "https://firebasestorage.googleapis.com/v0/b/happypaws-f5ad3.firebasestorage.app/o/doctors%2Fsalome.avif?alt=media&token=57f0aba9-f818-4af2-b8c8-f0892cc5df72",
+//            info: "კესო კერესელიძე #აიბოსგუნდის ფართო პროფილის ექიმი-ვეტერინარი და ინფექციონისტია.",
+//            rating: 4.6
+//        )
+//    )
+//}
 
