@@ -105,9 +105,6 @@ struct VetClinicDetailUIView: View {
 }
 
 
-
-
-
 #Preview {
     VetClinicDetailUIView(clinic: ClinicModel(
         address: "5 Freedom Square, Tbilisi, Georgia",
@@ -115,7 +112,7 @@ struct VetClinicDetailUIView: View {
         title: "Tbilisi Vet Clinic",
         clinicPhoneNumber: "+995 599 123 456",
         rating: 4.5,
-        doctors: [DoctorModel(name: "Dr. George Smith", status: "Surgeon", experience: 10, phoneNimber: "+995 555 123 456", image: "doctor1", info: "very good doctot",  rating: 4.6), DoctorModel(name: "Dr. George Smith", status: "Terapevt", experience: 10, phoneNimber: "+995 555 123 456", image: "doctor1", info: "very good doctot", rating: 5.0)],
+        doctors: [DoctorModel(id: "1", name: "Dr. George Smith", status: "Surgeon", experience: 10, phoneNimber: "+995 555 123 456", image: "doctor1", info: "very good doctot",  rating: 4.6), DoctorModel(id: "2", name: "Dr. George Smith", status: "Terapevt", experience: 10, phoneNimber: "+995 555 123 456", image: "doctor1", info: "very good doctot", rating: 5.0)],
         image: "vetClinic"
     ))
 }

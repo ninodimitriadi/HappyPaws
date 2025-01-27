@@ -92,6 +92,7 @@ struct PetProfileUIView: View {
             
             Spacer()
         }
+        .background(Color.backgroundGray)
         .onAppear {
             viewModel.fetchPetImage(imageURLString: pet.imageName)
         }

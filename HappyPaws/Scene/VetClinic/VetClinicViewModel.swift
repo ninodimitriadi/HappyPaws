@@ -62,7 +62,7 @@ class VetClinicViewModel {
                         continue
                     }
 
-                    let doctor = DoctorModel(name: name, status: status, experience: experience, phoneNimber: phoneNimber, image: doctorImage, info: info, rating: rating)
+                    let doctor = DoctorModel(id: document.documentID, name: name, status: status, experience: experience, phoneNimber: phoneNimber, image: doctorImage, info: info, rating: rating)
                     doctors.append(doctor)
                 }
 

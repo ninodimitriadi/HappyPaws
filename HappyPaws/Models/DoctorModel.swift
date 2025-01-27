@@ -6,6 +6,7 @@
 //
 
 struct DoctorModel {
+    var id: String
     let name: String
     var status: String
     var experience: Int
