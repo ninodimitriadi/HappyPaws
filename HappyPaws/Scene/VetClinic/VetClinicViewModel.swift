@@ -46,7 +46,6 @@ class VetClinicViewModel {
 
                 let coordinate = CLLocationCoordinate2D(latitude: coordinateData.latitude, longitude: coordinateData.longitude)
 
-                // Parse doctors
                 var doctors: [DoctorModel] = []
                 for doctorData in doctorArray {
                     guard

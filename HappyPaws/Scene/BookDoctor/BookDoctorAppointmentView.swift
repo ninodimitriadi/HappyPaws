@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct BookAppointmentView: View {
+struct BookDoctorAppointmentView: View {
     var doctor: DoctorModel
     @ObservedObject var viewModel: DoctorProfileViewModel
     @Environment(\.presentationMode) var presentationMode

@@ -13,6 +13,7 @@ struct GroomingDetailsUIView: View {
     @Environment(\.presentationMode) var presentationMode
     var salon: GroomingSalonModel
     var salonDetail: SalonDetailsModel
+    @State private var showBookingView = false
     
     var body: some View {
         VStack {
@@ -89,7 +90,7 @@ struct GroomingDetailsUIView: View {
             }
             
             Button(action: {
-                print("Book Appointment tapped")
+                showBookingView.toggle()
             }) {
                 Text("Book Appointment")
                     .font(.headline)
@@ -97,6 +98,9 @@ struct GroomingDetailsUIView: View {
                     .frame(width: 298, height: 50)
                     .background(Color.mainYellow)
                     .cornerRadius(25)
+            }
+            .sheet(isPresented: $showBookingView) {
+                BookGroomingAppointmentView(salon: salon, viewModel: GroomingDetailsViewModel())
             }
             .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 3)
             .padding(50)

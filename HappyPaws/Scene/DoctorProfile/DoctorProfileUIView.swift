@@ -92,7 +92,7 @@ struct DoctorProfileUIView: View {
                 .shadow(color: Color.black.opacity(0.3), radius: 5, x: 0, y: 3)
                 .padding(.top, 15)
                 .sheet(isPresented: $showBookingView) {
-                    BookAppointmentView(doctor: doctor, viewModel: viewModel)
+                    BookDoctorAppointmentView(doctor: doctor, viewModel: viewModel)
                 }
                 
                 Spacer()
