@@ -1,25 +1,26 @@
 //
-//  DoctorProfileViewModel.swift
+//  GroomingDetailsViewModel.swift
 //  HappyPaws
 //
-//  Created by nino on 1/27/25.
+//  Created by nino on 1/29/25.
 //
+
 
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 
-class DoctorProfileViewModel: ObservableObject {
+class GroomingDetailsViewModel: ObservableObject {
     private let db = Firestore.firestore()
     
     @Published var selectedDate: Date = Date()
 
-    public func bookAppointment(for doctorID: String, startTime: Date, completion: @escaping (Bool, String) -> Void) {
-        let appointmentDuration: TimeInterval = 30 * 60
+    public func bookGroomingAppointment(for salonID: String, startTime: Date, completion: @escaping (Bool, String) -> Void) {
+        let appointmentDuration: TimeInterval = 60 * 60 // 1 hour duration
         let endTime = startTime.addingTimeInterval(appointmentDuration)
 
-        db.collection("Doctor appointments")
-            .whereField("doctorID", isEqualTo: doctorID)
+        db.collection("Grooming appointments")
+            .whereField("salonID", isEqualTo: salonID)
             .getDocuments { querySnapshot, error in
                 if let error = error {
                     completion(false, "Error fetching appointments: \(error.localizedDescription)")
@@ -33,6 +34,7 @@ class DoctorProfileViewModel: ObservableObject {
                         let existingEndTime = (data["endTime"] as? Timestamp)?.dateValue()
 
                         if let existingStartTime = existingStartTime, let existingEndTime = existingEndTime {
+                            // Check if the new appointment overlaps with the existing one
                             if (startTime < existingEndTime && endTime > existingStartTime) {
                                 completion(false, "This time slot is already booked.")
                                 return
@@ -40,26 +42,25 @@ class DoctorProfileViewModel: ObservableObject {
                         }
                     }
                 }
-                self.createAppointment(doctorID: doctorID, startTime: startTime, endTime: endTime, completion: completion)
+                self.createGroomingAppointment(salonID: salonID, startTime: startTime, endTime: endTime, completion: completion)
             }
     }
 
-
-    private func createAppointment(doctorID: String, startTime: Date, endTime: Date, completion: @escaping (Bool, String) -> Void) {
+    private func createGroomingAppointment(salonID: String, startTime: Date, endTime: Date, completion: @escaping (Bool, String) -> Void) {
         guard let userID = Auth.auth().currentUser?.uid else {
             completion(false, "User is not logged in.")
             return
         }
 
         let appointmentData: [String: Any] = [
-            "doctorID": doctorID,
+            "salonID": salonID,
             "userID": userID,
-            "startTime": startTime,
-            "endTime": endTime,
+            "startTime": Timestamp(date: startTime),
+            "endTime": Timestamp(date: endTime),
             "status": "booked"
         ]
 
-        db.collection("Doctor appointments").addDocument(data: appointmentData) { error in
+        db.collection("Grooming appointments").addDocument(data: appointmentData) { error in
             if let error = error {
                 completion(false, "Error booking appointment: \(error.localizedDescription)")
             } else {
