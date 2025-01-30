@@ -97,6 +97,7 @@ struct DoctorProfileUIView: View {
                 
                 Spacer()
             }
+            .background(Color.white)
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: backButton)
