@@ -44,10 +44,10 @@ class UserProfileViewController: UIViewController {
         stackView.distribution = .fillEqually
         stackView.backgroundColor = .white
         stackView.layer.cornerRadius = 20
-        stackView.layer.shadowColor = UIColor.black.cgColor
-        stackView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        stackView.layer.shadowRadius = 4
-        stackView.layer.shadowOpacity = 0.2
+        stackView.layer.shadowColor = UIColor.gray.withAlphaComponent(0.2).cgColor
+        stackView.layer.shadowOffset = CGSize(width: 0, height: 22.9)
+        stackView.layer.shadowOpacity = 1.0
+        stackView.layer.shadowRadius = 11.45
         stackView.layer.masksToBounds = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -136,7 +136,7 @@ class UserProfileViewController: UIViewController {
         view.backgroundColor = .white
         
         let headerView = UIView()
-        headerView.backgroundColor = .black
+        headerView.backgroundColor = .darkBlue.withAlphaComponent(0.9)
         headerView.layer.cornerRadius = 40
         headerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerView)
