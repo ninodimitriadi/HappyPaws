@@ -51,6 +51,7 @@ struct VetClinicDetailUIView: View {
                                 Spacer()
                                 Text("⭐️ \(clinic.rating, specifier: "%.1f")")
                                     .font(.subheadline)
+                                    .foregroundStyle(Color.black)
                             }
 
                             HStack {
@@ -60,6 +61,7 @@ struct VetClinicDetailUIView: View {
                                     .frame(width: 15, height: 18)
                                 Text(clinic.address)
                                     .font(.subheadline)
+                                    .foregroundStyle(Color.black)
                             }
                             HStack {
                                 Image("telephone")
@@ -68,11 +70,13 @@ struct VetClinicDetailUIView: View {
                                     .frame(width: 15, height: 17)
                                 Text(clinic.clinicPhoneNumber)
                                     .font(.subheadline)
+                                    .foregroundStyle(Color.black)
                             }
                             
                             Text("Our Doctors")
                                 .font(.headline)
                                 .padding(.top, 10)
+                                .foregroundStyle(Color.black)
                         }
                         .padding(15)
                         
@@ -99,6 +103,7 @@ struct VetClinicDetailUIView: View {
                         .padding(.top, 50)
                 }
             }
+            .background(Color.white)
             .edgesIgnoringSafeArea(.top)
         }
     }

@@ -11,14 +11,14 @@ import UIKit
 
 func showSaveSuccessView(massage: String, parentView: UIView) {
     let successView = UIView()
-    successView.backgroundColor = UIColor.white.withAlphaComponent(0.7)
+    successView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
     successView.layer.cornerRadius = 12
     successView.layer.masksToBounds = true
     successView.translatesAutoresizingMaskIntoConstraints = false
 
     let messageLabel = UILabel()
     messageLabel.text = massage
-    messageLabel.textColor = .gray
+    messageLabel.textColor = .white
     messageLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
     messageLabel.textAlignment = .center
     messageLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -38,7 +38,7 @@ func showSaveSuccessView(massage: String, parentView: UIView) {
         messageLabel.centerYAnchor.constraint(equalTo: successView.centerYAnchor)
     ])
 
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
         successView.removeFromSuperview()
     }
 }

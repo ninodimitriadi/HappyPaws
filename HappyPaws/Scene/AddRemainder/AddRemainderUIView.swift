@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct AddReminderView: View {
-    @ObservedObject var viewModel = ReminderViewModel()
+    @ObservedObject var viewModel = AddReminderViewModel()
     @State private var title: String = ""
     @State private var notes: String = ""
     @State private var dueDate: Date = Date()
     @State private var hasDueDate: Bool = false
     @Environment(\.presentationMode) var presentationMode
+    var onReminderAdded: (() -> Void)?
 
     var body: some View {
         NavigationView {
@@ -36,6 +37,7 @@ struct AddReminderView: View {
                     Text("Save Reminder")
                 }
             }
+            .background(Color.white)
             .navigationTitle("Add Reminder")
             .navigationBarItems(trailing: Button("Cancel") {
                 presentationMode.wrappedValue.dismiss()
@@ -47,6 +49,7 @@ struct AddReminderView: View {
         let dueDateToSave = hasDueDate ? dueDate : nil
         viewModel.addReminder(title: title, notes: notes, dueDate: dueDateToSave) { success in
             if success {
+                onReminderAdded?()
                 presentationMode.wrappedValue.dismiss()
             } else {
                 print("Failed to save reminder.")

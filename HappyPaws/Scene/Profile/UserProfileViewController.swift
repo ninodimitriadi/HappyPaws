@@ -7,161 +7,243 @@
 
 import UIKit
 import SwiftUI
+import Firebase
+import PhotosUI
+import Combine
 
-class UserProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class UserProfileViewController: UIViewController {
     
     private var viewModel = UserProfileViewModel()
-
+    private var reminderViewModel = AddReminderViewModel()
+    
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(systemName: "person.crop.circle")
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 50
-        imageView.layer.borderWidth = 2
-        imageView.layer.borderColor = UIColor.gray.cgColor
-        imageView.layer.shadowColor = UIColor.black.cgColor
-        imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        imageView.layer.shadowOpacity = 0.2
-        imageView.layer.shadowRadius = 4
-        imageView.layer.masksToBounds = true
-        imageView.isUserInteractionEnabled = true
+        imageView.layer.cornerRadius = 27
+        imageView.clipsToBounds = true
+        imageView.image = UIImage(systemName: "person.crop.circle")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .white
+        imageView.tintColor = .black
         return imageView
     }()
     
-    private let usernameLabel: UILabel = {
+    private let nameLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Username"
-        label.font = UIFont.boldSystemFont(ofSize: 22)
-        label.textColor = UIColor.darkGray
+        label.font = UIFont(name: "Poppins-Bold", size: 24)
+        label.textColor = .white
         label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    private let emailLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "user@example.com"
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = UIColor.gray
-        label.textAlignment = .center
-        return label
-    }()
-    
-    private let remindersButton = createButton(title: "View Reminders", iconName: "calendar", backgroundColor: .mainYellow)
-    
-    private let resetPasswordButton = createButton(title: "Reset Password", iconName: "lock", backgroundColor: .mainYellow)
-    
-    private var languageButton = createButton(title: "Change Language 🇬🇪", iconName: "globe", backgroundColor: .mainYellow)
-    private let logoutButton = createButton(title: "Logout", iconName: "arrow.backward", backgroundColor: .mainYellow)
-    
-    private let buttonStackView: UIStackView = {
+
+    private let dashboardStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.spacing = 18
+        stackView.spacing = 16
+        stackView.distribution = .fillEqually
+        stackView.backgroundColor = .white
+        stackView.layer.cornerRadius = 20
+        stackView.layer.shadowColor = UIColor.black.cgColor
+        stackView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        stackView.layer.shadowRadius = 4
+        stackView.layer.shadowOpacity = 0.2
+        stackView.layer.masksToBounds = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
+    }()
+    
+    private let dashboardName: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Poppins-Bold", size: 14)
+        label.textColor = .black
+        label.text = "Dashboard"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private let resetButton = createButton(title: "Reset password", iconName: "lock")
+    
+    private let changeLanguageButton = createButton(title: "Change language", iconName: "gear")
+    
+    private let addReminderButton = createButton(title: "Add reminder", iconName: "square.and.pencil")
+    
+    private let reminderLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Poppins-Bold", size: 36)
+        label.textColor = .black
+        label.textAlignment = .center
+        label.text = "Reminders"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private var remindersCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 270, height: 130)
+        layout.minimumLineSpacing = 12
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .clear
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        return collectionView
+    }()
+    
+    private let logoutButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Log out", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.titleLabel?.font = UIFont(name: "Poppins-Bold", size: 20)
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 4)
+        button.layer.shadowRadius = 4
+        button.layer.shadowOpacity = 0.5
+        button.layer.masksToBounds = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     private let saveButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Save", for: .normal)
-        button.setTitleColor(UIColor.systemBlue, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.titleLabel?.font = UIFont(name: "Poppins-Bold", size: 20)
         return button
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .backgroundGray
+        viewModel.fetchReminders()
         setupUI()
-        setUpConstraints()
-        addTapGestureToProfileImage()
+        setupCollectionView()
+        setupStackView()
         bindViewModel()
+        addButtonTarget()
         loadCurrentUser()
-    }
-
-    private func setupUI() {
-        view.addSubview(profileImageView)
-        view.addSubview(usernameLabel)
-        view.addSubview(emailLabel)
-        view.addSubview(buttonStackView)
-        view.addSubview(saveButton)
-        buttonStackView.addArrangedSubview(remindersButton)
-        buttonStackView.addArrangedSubview(resetPasswordButton)
-        buttonStackView.addArrangedSubview(languageButton)
-        buttonStackView.addArrangedSubview(logoutButton)
-
-        languageButton.addTarget(self, action: #selector(changeLanguage), for: .touchUpInside)
-        resetPasswordButton.addTarget(self, action: #selector(resetPassword), for: .touchUpInside)
-        logoutButton.addTarget(self, action: #selector(logout), for: .touchUpInside)
-        saveButton.addTarget(self, action: #selector(saveProfile), for: .touchUpInside)
-        remindersButton.addTarget(self, action: #selector(navigateToReminder), for: .touchUpInside)
+        addTapGestureToProfileImage()
+        
+        viewModel.onRemindersUpdated = { [weak self] in
+            self?.remindersCollectionView.reloadData()
+        }
+        
+        reminderViewModel.onReminderAdded = { [weak self] in
+            self?.viewModel.fetchReminders()
+        }
     }
     
-    private func setUpConstraints() {
+    private func setupUI() {
+        view.backgroundColor = .white
+        
+        let headerView = UIView()
+        headerView.backgroundColor = .black
+        headerView.layer.cornerRadius = 40
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(headerView)
+        
+        headerView.addSubview(profileImageView)
+        headerView.addSubview(nameLabel)
+        
+        view.addSubview(dashboardStackView)
+        
+        view.addSubview(reminderLabel)
+        
+        view.addSubview(remindersCollectionView)
+        view.addSubview(logoutButton)
+        
+        view.addSubview(saveButton)
+        
         NSLayoutConstraint.activate([
-            profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
-            profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            headerView.topAnchor.constraint(equalTo: view.topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 319),
+            
+            profileImageView.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 60),
             profileImageView.widthAnchor.constraint(equalToConstant: 100),
-            profileImageView.heightAnchor.constraint(equalToConstant: 100)
+            profileImageView.heightAnchor.constraint(equalToConstant: 100),
+            
+            nameLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 8),
+            nameLabel.centerXAnchor.constraint(equalTo: profileImageView.centerXAnchor),
+            
+            dashboardStackView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 28),
+            dashboardStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            dashboardStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            dashboardStackView.heightAnchor.constraint(equalToConstant: 166),
+            
+            reminderLabel.topAnchor.constraint(equalTo: dashboardStackView.bottomAnchor, constant: 35),
+            reminderLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            
+            remindersCollectionView.topAnchor.constraint(equalTo: reminderLabel.bottomAnchor),
+            remindersCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            remindersCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            remindersCollectionView.heightAnchor.constraint(equalToConstant: 120),
+            
+            logoutButton.topAnchor.constraint(equalTo: remindersCollectionView.bottomAnchor, constant: 45),
+            logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            saveButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32)
         ])
+    }
+    
+    private func setupStackView() {
+        dashboardStackView.addArrangedSubview(dashboardName)
+        dashboardStackView.addArrangedSubview(resetButton)
+        dashboardStackView.addArrangedSubview(changeLanguageButton)
+        dashboardStackView.addArrangedSubview(addReminderButton)
         
-        NSLayoutConstraint.activate([
-            usernameLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 20),
-            usernameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
-        
-        NSLayoutConstraint.activate([
-            emailLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 5),
-            emailLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
-        
-        NSLayoutConstraint.activate([
-            buttonStackView.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 60),
-            buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
-        ])
-        
-        NSLayoutConstraint.activate([
-            saveButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            saveButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
-        ])
+        dashboardStackView.layoutMargins = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+        dashboardStackView.isLayoutMarginsRelativeArrangement = true
+    }
+
+    
+    private func setupCollectionView() {
+        remindersCollectionView.delegate = self
+        remindersCollectionView.dataSource = self
+        remindersCollectionView.register(ReminderCell.self, forCellWithReuseIdentifier: ReminderCell.reuseIdentifier)
+    }
+    
+    private func addButtonTarget() {
+        resetButton.addTarget(self, action: #selector(resetPasswordTapped), for: .touchUpInside)
+        changeLanguageButton.addTarget(self, action: #selector(changeLanguageTapped), for: .touchUpInside)
+        addReminderButton.addTarget(self, action: #selector(addReminderTapped), for: .touchUpInside)
+        logoutButton.addTarget(self, action: #selector(logOutTapped), for: .touchUpInside)
+        saveButton.addTarget(self, action: #selector(saveProfileTapped), for: .touchUpInside)
     }
     
     private func bindViewModel() {
-        viewModel.onImageUploaded = { [weak self] url in
-            if let url = url {
-                print("Image uploaded successfully: \(url)")
-                self?.profileImageView.image = UIImage(contentsOfFile: url.absoluteString)
-            } else {
-                print("Image upload failed")
-            }
-        }
-
-        viewModel.onError = { [weak self] error in
-            print("Error: \(error.localizedDescription)")
-            
-            let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self?.present(alert, animated: true, completion: nil)
-        }
         
-        viewModel.onLogoutSuccess = { 
-            let loginVC = LogInViewController()
-            if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
-                let navController = UINavigationController(rootViewController: loginVC)
-                sceneDelegate.window?.rootViewController = navController
-                sceneDelegate.window?.makeKeyAndVisible()
-            }
-        }
+        viewModel.onImageUploaded = { [weak self] url in
+             if let url = url {
+                 self?.loadImage(from: url)
+             } else {
+                 print("Image upload failed")
+             }
+         }
+
+         viewModel.onError = { [weak self] error in
+             print("Error: \(error.localizedDescription)")
+             
+             let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+             self?.present(alert, animated: true, completion: nil)
+         }
+         
+         viewModel.onLogoutSuccess = {
+             let loginVC = LogInViewController()
+             if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+                 let navController = UINavigationController(rootViewController: loginVC)
+                 sceneDelegate.window?.rootViewController = navController
+                 sceneDelegate.window?.makeKeyAndVisible()
+             }
+         }
     }
     
     private func addTapGestureToProfileImage() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectProfileImage))
+        profileImageView.isUserInteractionEnabled = true
         profileImageView.addGestureRecognizer(tapGesture)
     }
 
@@ -172,26 +254,32 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         present(imagePicker, animated: true, completion: nil)
     }
     
-    @objc private func changeLanguage() {
-        if languageButton.title(for: .normal)?.contains("🇬🇪") == true {
-            languageButton.setTitle("Change Language 🇺🇸", for: .normal)
-        } else {
-            languageButton.setTitle("Change Language 🇬🇪", for: .normal)
+    @objc private func saveProfileTapped() {
+        guard let image = profileImageView.image else {
+            print("No image to upload")
+            return
         }
+        viewModel.uploadProfileImage(image)
+        showSaveSuccessAlert()
     }
     
-    @objc private func resetPassword() {
+    @objc private func resetPasswordTapped() {
         let forgetPasswordVC = ForgetPasswordViewController()
         self.navigationController?.pushViewController(forgetPasswordVC, animated: true)
     }
     
-    @objc private func navigateToReminder() {
-        let reminderListView = ReminderListView()
-        let hostingController = UIHostingController(rootView: reminderListView)
-        
-        self.navigationController?.pushViewController(hostingController, animated: true)
+    @objc private func changeLanguageTapped() {
     }
-    @objc private func logout() {
+    
+    @objc private func addReminderTapped() {
+        let addReminderView = AddReminderView(onReminderAdded: { [weak self] in
+            self?.viewModel.fetchReminders()
+        })
+        let hostingController = UIHostingController(rootView: addReminderView)
+        self.present(hostingController, animated: true, completion: nil)
+    }
+    
+    @objc private func logOutTapped() {
         let alert = UIAlertController(title: "Are you sure?",
                                       message: "Do you really want to log out?",
                                       preferredStyle: .alert)
@@ -204,23 +292,6 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
         
         present(alert, animated: true, completion: nil)
     }
-
-    @objc private func saveProfile() {
-        guard let image = profileImageView.image else {
-            print("No image to upload")
-            return
-        }
-        viewModel.uploadProfileImage(image)
-        showSaveSuccessAlert()
-    }
-
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        picker.dismiss(animated: true, completion: nil)
-        
-        if let selectedImage = info[.originalImage] as? UIImage {
-            profileImageView.image = selectedImage
-        }
-    }
     
     private func loadCurrentUser() {
         viewModel.fetchCurrentUser { [weak self] user in
@@ -230,8 +301,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
             }
             
             DispatchQueue.main.async {
-                self?.usernameLabel.text = user.userName
-                self?.emailLabel.text = user.email
+                self?.nameLabel.text = user.userName
                 
                 if let profileImageURL = user.profileImage {
                     self?.loadImage(from: profileImageURL)
@@ -239,7 +309,7 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
             }
         }
     }
-
+    
     private func loadImage(from url: URL) {
         let task = URLSession.shared.dataTask(with: url) { data, _, error in
             if let error = error {
@@ -259,8 +329,66 @@ class UserProfileViewController: UIViewController, UIImagePickerControllerDelega
     private func showSaveSuccessAlert() {
         showSaveSuccessView(massage: "Profile saved successfully!", parentView: view)
     }
+    
+    private func reloadReminders() {
+        DispatchQueue.main.async {
+            self.remindersCollectionView.reloadData()
+        }
+    }
 }
 
+extension UserProfileViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModel.reminders.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReminderCell.reuseIdentifier, for: indexPath) as? ReminderCell else {
+            fatalError("Could not dequeue a cell of type ReminderCell.")
+        }
+
+        let reminder = viewModel.reminders[indexPath.item]
+        
+        if let dueDateComponents = reminder.dueDateComponents {
+            let dueDate = Calendar.current.date(from: dueDateComponents)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
+            let formattedDate = dueDate != nil ? dateFormatter.string(from: dueDate!) : "No Date"
+            
+            cell.configure(title: reminder.title, date: formattedDate, notes: reminder.notes ?? "No Notes")
+        } else {
+            cell.configure(title: reminder.title, date: "No Date", notes: reminder.notes ?? "No Notes")
+        }
+        
+        cell.onDeleteReminder = { [weak self] in
+            self?.deleteReminder(at: indexPath)
+        }
+        
+        return cell
+    }
+
+    
+    func deleteReminder(at indexPath: IndexPath) {
+        viewModel.deleteReminder(at: indexPath.item)
+    }
+}
+
+extension UserProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func presentImagePicker() {
+        let pickerController = UIImagePickerController()
+        pickerController.delegate = self
+        pickerController.sourceType = .photoLibrary
+        present(pickerController, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedImage = info[.originalImage] as? UIImage {
+            profileImageView.image = selectedImage
+            viewModel.uploadProfileImage(selectedImage)
+        }
+        dismiss(animated: true, completion: nil)
+    }
+}
 
 
 struct UserProfileViewControllerWrapper: UIViewControllerRepresentable {

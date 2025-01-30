@@ -29,9 +29,8 @@ class GroomingSalonViewController: UIViewController, MKMapViewDelegate, CLLocati
     }
 
     private func setupMapView() {
-        mapView.delegate = self
-        mapView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mapView)
+        mapView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             mapView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -39,8 +38,8 @@ class GroomingSalonViewController: UIViewController, MKMapViewDelegate, CLLocati
             mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
-
-        print("MapView added successfully")
+        
+        mapView.delegate = self
     }
 
     func setupLocationManager() {
