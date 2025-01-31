@@ -88,12 +88,12 @@ class GroomingSalonViewController: UIViewController, MKMapViewDelegate, CLLocati
     
     private func navigateSalonDetail() {
         guard let selectedSalon = selectedSalon, let selectedSalonDetail = selectedSalonDetail else {
-            print("Missing salon or salon details for navigation.")
             return
         }
         
         let groomingDetailView = NavigationView {
             GroomingDetailsUIView(salon: selectedSalon, salonDetail: selectedSalonDetail)
+                .environmentObject(LanguageManager.shared)
         }
 
         let hostingController = UIHostingController(rootView: groomingDetailView)
@@ -157,7 +157,7 @@ class GroomingSalonViewController: UIViewController, MKMapViewDelegate, CLLocati
     private func calculateDistance(to clinic: GroomingSalonModel) -> String {
         guard let userLocation = userLocation else { return "N/A" }
         let distance = userLocation.distance(from: CLLocation(latitude: clinic.coordinate.latitude, longitude: clinic.coordinate.longitude))
-        return String(format: "%.1f km", distance / 1000)
+        return String(format:  "%.1f \(LanguageManager.shared.localizedString(forKey: "km"))", distance / 1000)
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

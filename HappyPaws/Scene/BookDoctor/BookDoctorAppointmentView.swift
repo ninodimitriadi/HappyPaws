@@ -11,22 +11,24 @@ struct BookDoctorAppointmentView: View {
     var doctor: DoctorModel
     @ObservedObject var viewModel: DoctorProfileViewModel
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject private var languageManager: LanguageManager
     @State private var bookingMessage: String = ""
     @State private var showAlert = false
 
     var body: some View {
         NavigationView {
             VStack {
-                Text("Choose Appointment Time")
+                Text(languageManager.localizedString(forKey: "choose_appointment_time"))
                     .font(.title)
                     .fontWeight(.bold)
                     .padding()
 
                 DatePicker("Select Date & Time", selection: $viewModel.selectedDate, displayedComponents: [.date, .hourAndMinute])
                     .datePickerStyle(GraphicalDatePickerStyle())
+                    .environment(\.locale, Locale(identifier: languageManager.currentLanguage))
                     .padding()
 
-                Button("Confirm Booking") {
+                Button(languageManager.localizedString(forKey: "confirm_booking")) {
                     confirmBooking()
                 }
                 .padding()
@@ -36,8 +38,8 @@ struct BookDoctorAppointmentView: View {
                 .cornerRadius(10)
                 .padding(.top, 20)
             }
-            .navigationBarTitle("Book Appointment", displayMode: .inline)
-            .navigationBarItems(leading: Button("Close") {
+            .navigationBarTitle(languageManager.localizedString(forKey: "book_appoimtment"), displayMode: .inline)
+            .navigationBarItems(leading: Button(languageManager.localizedString(forKey: "close")) {
                 presentationMode.wrappedValue.dismiss()
             })
             .alert(isPresented: $showAlert) {

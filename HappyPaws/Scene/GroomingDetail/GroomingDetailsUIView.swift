@@ -11,6 +11,7 @@ import CoreLocation
 
 struct GroomingDetailsUIView: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject private var languageManager: LanguageManager
     var salon: GroomingSalonModel
     var salonDetail: SalonDetailsModel
     @State private var showBookingView = false
@@ -60,7 +61,7 @@ struct GroomingDetailsUIView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 20, height: 20)
-                            Text("Opening Hours")
+                            Text(languageManager.localizedString(forKey: "opening_hours"))
                                 .font(.headline)
                         }
                         
@@ -84,15 +85,15 @@ struct GroomingDetailsUIView: View {
             .padding(.trailing, 23)
             
             HStack {
-                SmallRoundViewWithText(icon: "scissors", text: "HAIRSTYLE​")
-                SmallRoundViewWithText(icon: "shower.fill", text: "WASHING BRUSHING​")
-                SmallRoundViewWithText(icon: "ladybug", text: "REMOVAL OF PARASITES​")
+                SmallRoundViewWithText(icon: "scissors", text: languageManager.localizedString(forKey: "hairstyle"))
+                SmallRoundViewWithText(icon: "shower.fill", text: languageManager.localizedString(forKey: "washing_brushing"))
+                SmallRoundViewWithText(icon: "ladybug", text: languageManager.localizedString(forKey: "removal_of_parasites"))
             }
             
             Button(action: {
                 showBookingView.toggle()
             }) {
-                Text("Book Appointment")
+                Text(languageManager.localizedString(forKey: "book_appoimtment"))
                     .font(.headline)
                     .foregroundColor(.white)
                     .frame(width: 298, height: 50)

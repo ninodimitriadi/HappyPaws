@@ -57,23 +57,21 @@ class UserProfileViewController: UIViewController {
         let label = UILabel()
         label.font = UIFont(name: "Poppins-Bold", size: 14)
         label.textColor = .black
-        label.text = "Dashboard"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
-    private let resetButton = createButton(title: "Reset password", iconName: "lock")
+    private let resetButton = createButton(iconName: "lock")
     
-    private let changeLanguageButton = createButton(title: "Change language", iconName: "gear")
+    private let changeLanguageButton = createButton(iconName: "gear")
     
-    private let addReminderButton = createButton(title: "Add reminder", iconName: "square.and.pencil")
+    private let addReminderButton = createButton(iconName: "square.and.pencil")
     
     private let reminderLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Poppins-Bold", size: 36)
         label.textColor = .black
         label.textAlignment = .center
-        label.text = "Reminders"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -91,7 +89,6 @@ class UserProfileViewController: UIViewController {
     
     private let logoutButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Log out", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.titleLabel?.font = UIFont(name: "Poppins-Bold", size: 20)
         button.layer.shadowColor = UIColor.black.cgColor
@@ -106,7 +103,6 @@ class UserProfileViewController: UIViewController {
     private let saveButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Save", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "Poppins-Bold", size: 20)
         return button
@@ -130,6 +126,8 @@ class UserProfileViewController: UIViewController {
         reminderViewModel.onReminderAdded = { [weak self] in
             self?.viewModel.fetchReminders()
         }
+        
+        reloadUIForNewLanguage()
     }
     
     private func setupUI() {
@@ -198,7 +196,6 @@ class UserProfileViewController: UIViewController {
         dashboardStackView.isLayoutMarginsRelativeArrangement = true
     }
 
-    
     private func setupCollectionView() {
         remindersCollectionView.delegate = self
         remindersCollectionView.dataSource = self
@@ -214,31 +211,30 @@ class UserProfileViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        
         viewModel.onImageUploaded = { [weak self] url in
-             if let url = url {
-                 self?.loadImage(from: url)
-             } else {
-                 print("Image upload failed")
-             }
-         }
+            if let url = url {
+                self?.loadImage(from: url)
+            } else {
+                print("Image upload failed")
+            }
+        }
 
-         viewModel.onError = { [weak self] error in
-             print("Error: \(error.localizedDescription)")
-             
-             let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-             self?.present(alert, animated: true, completion: nil)
-         }
-         
-         viewModel.onLogoutSuccess = {
-             let loginVC = LogInViewController()
-             if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
-                 let navController = UINavigationController(rootViewController: loginVC)
-                 sceneDelegate.window?.rootViewController = navController
-                 sceneDelegate.window?.makeKeyAndVisible()
-             }
-         }
+        viewModel.onError = { [weak self] error in
+            print("Error: \(error.localizedDescription)")
+            
+            let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self?.present(alert, animated: true, completion: nil)
+        }
+        
+        viewModel.onLogoutSuccess = {
+            let loginVC = LogInViewController()
+            if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+                let navController = UINavigationController(rootViewController: loginVC)
+                sceneDelegate.window?.rootViewController = navController
+                sceneDelegate.window?.makeKeyAndVisible()
+            }
+        }
     }
     
     private func addTapGestureToProfileImage() {
@@ -269,13 +265,46 @@ class UserProfileViewController: UIViewController {
     }
     
     @objc private func changeLanguageTapped() {
+        let alert = UIAlertController(title: "Change Language", message: "Select a language", preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "English", style: .default, handler: { _ in
+            self.setLanguage("en")
+        }))
+        
+        alert.addAction(UIAlertAction(title: "ქართული", style: .default, handler: { _ in
+            self.setLanguage("ka")
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func setLanguage(_ languageCode: String) {
+        LanguageManager.shared.setLanguage(languageCode)
+        reloadUIForNewLanguage()
+    }
+    
+    private func reloadUIForNewLanguage() {
+        print("Reloading UI for Language: \(LanguageManager.shared.currentLanguage)")
+        
+        // Update all UI elements with localized strings
+        dashboardName.text = LanguageManager.shared.localizedString(forKey: "dashboard")
+        resetButton.setTitle(LanguageManager.shared.localizedString(forKey: "reset_password"), for: .normal)
+        changeLanguageButton.setTitle(LanguageManager.shared.localizedString(forKey: "change_language"), for: .normal)
+        addReminderButton.setTitle(LanguageManager.shared.localizedString(forKey: "add_reminder"), for: .normal)
+        reminderLabel.text = LanguageManager.shared.localizedString(forKey: "reminders")
+        logoutButton.setTitle(LanguageManager.shared.localizedString(forKey: "log_out"), for: .normal)
+        saveButton.setTitle(LanguageManager.shared.localizedString(forKey: "save"), for: .normal)
+        
+        remindersCollectionView.reloadData()
     }
     
     @objc private func addReminderTapped() {
         let addReminderView = AddReminderView(onReminderAdded: { [weak self] in
             self?.viewModel.fetchReminders()
         })
-        let hostingController = UIHostingController(rootView: addReminderView)
+        let hostingController = UIHostingController(rootView: addReminderView.environmentObject(LanguageManager.shared))
         self.present(hostingController, animated: true, completion: nil)
     }
     
@@ -367,7 +396,6 @@ extension UserProfileViewController: UICollectionViewDelegate, UICollectionViewD
         return cell
     }
 
-    
     func deleteReminder(at indexPath: IndexPath) {
         viewModel.deleteReminder(at: indexPath.item)
     }
@@ -389,7 +417,6 @@ extension UserProfileViewController: UIImagePickerControllerDelegate, UINavigati
         dismiss(animated: true, completion: nil)
     }
 }
-
 
 struct UserProfileViewControllerWrapper: UIViewControllerRepresentable {
   func makeUIViewController(context: Context) -> UserProfileViewController {

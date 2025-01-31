@@ -1,0 +1,70 @@
+/* 
+  Localizable.strings
+  HappyPaws
+
+  Created by nino on 1/30/25.
+  
+*/
+
+"welcome_text" = "გამარჯობა";
+"email_address" = "ელფოსტის მისამართი";
+"password" = "პაროლი";
+"log_in" = "შესვლა";
+"forgotten_password" = "დაგავიწყდა პაროლი?";
+"or_log_in" = "ან შედი";
+"sign_up" = "რეგისტრაცია";
+"new_in" = "ახალი ხარ HappyPaws? დარეგისტრირდი";
+"reset_password" = "პაროლის აღდგენა";
+"create_an_account" = "შექმენი ანგარიში";
+"username" = "სახელი";
+"my_pets" = "ჩემი ცხოველები";
+"about" = "ცხოველი: ";
+"weight" = "წონა";
+"height" = "სიმაღლე";
+"color" = "ფერი";
+"add_a_reminder" = "დაამატე შეხსენება";
+"cancle" = "გაუქმება";
+"title" = "სათაური";
+"enter_title" = "შეიყვანე სათაური";
+"note" = "ჩანაწერი";
+"enter_note" = "შეიყვანე ჩანაწერი";
+"set_deu_date" = "დააყენე დრო";
+"due_date" = "დრო";
+"save_reminder" = "შეინახე შეხსენება";
+"pet_name" = "ცხოველის სახელი";
+"pet_breed" = "ცხოველის ჯიში";
+"pet_age" = "ცხოველის ასაკი";
+"save_pet" = "დაამატე ცხოველი";
+"gender" = "გენდერი";
+"female" = "მდედრობითი";
+"male" = "მამრობითი";
+"pet_weight_kg" = "ცხოველის წონა (კგ)";
+"pet_height_cm" = "ცხოველის სიმაღლე (სმ)";
+"pet_color" = "ცხოველის ფერი";
+"km" = "კმ";
+"our_doctors" = "ჩვენი ექიმები";
+"experience" = "გამოცდილება";
+"year" = "წელი";
+"rating" = "შეფასება";
+"about_me" = "ჩემს შესახებ";
+"book_appoimtment" = "დაჯავშნე ვიზიტი";
+"choose_appointment_time" = "აირჩიე ვიზიტის დრო";
+"time" = "დრო";
+"confirm_booking" = "დაჯავშნა";
+"opening_hours" = "სამუშაო საათები";
+"hairstyle" = "შეჭრა";
+"washing_brushing" = "დაბანა დავარცხნა";
+"removal_of_parasites" = "პარაზიტების მოშორება";
+"book_Grooming" = "დაჯავშნე გრუმინგი";
+"save" = "შენახვა";
+"dashboard" = "დაფა";
+"change_language" = "ენის ცვლილება";
+"add_reminder" = "შეხსენების დამატება";
+"reminders" = "შეხსენებები";
+"log_out" = "გამოსვლა";
+"home" = "მთავარი";
+"health" = "ჯანმრთელობა";
+"grooming" = "გრუმინგუ";
+"profile" = "პროფილი";
+"profile_saved_successfully" = "პროფილი შეინახა წარმატებით!";
+"close" = "დახურვა";

@@ -17,7 +17,6 @@ class SignUpViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "dog")
         imageView.contentMode = .scaleAspectFill
-        
         return imageView
     }()
     
@@ -27,24 +26,20 @@ class SignUpViewController: UIViewController {
         view.backgroundColor = .white
         view.layer.opacity = 0.8
         view.layer.cornerRadius = 10
-        
         return view
     }()
     
     private var logInLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Create an account"
         label.font = UIFont(name: "Raleway-Bold", size: 27)
         label.textColor = .customBlue
-        
         return label
     }()
     
     private lazy var mailTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = " Email Address"
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.textAlignment = .left
         textField.layer.cornerRadius = 5
@@ -54,14 +49,12 @@ class SignUpViewController: UIViewController {
         textField.layer.shadowOpacity = 0.5
         textField.layer.shadowOffset = CGSize(width: 0, height: 2)
         textField.layer.shadowRadius = 4
-
         return textField
     }()
     
     private lazy var userNameTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = " Username"
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.textAlignment = .left
         textField.layer.cornerRadius = 5
@@ -71,14 +64,12 @@ class SignUpViewController: UIViewController {
         textField.layer.shadowOpacity = 0.5
         textField.layer.shadowOffset = CGSize(width: 0, height: 2)
         textField.layer.shadowRadius = 4
-
         return textField
     }()
     
     private lazy var passwordTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = " Password"
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.textAlignment = .left
         textField.isSecureTextEntry = true
@@ -107,24 +98,19 @@ class SignUpViewController: UIViewController {
     
     private lazy var signUpButton: UIButton = {
         let button = UIButton()
-        button.configureButton(title: "Sign Up", fontSize: 17, backgroundColor: .customBlue)
+        button.configureButton(title: "", fontSize: 17, backgroundColor: .customBlue)
         button.layer.cornerRadius = 5
-        
         button.addAction(UIAction(handler: { [weak self] _ in
             self?.pressSignUpButton(button: button)
         }), for: .touchUpInside)
-        
-        
         return button
     }()
     
     private lazy var orLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "OR Log In with"
         label.font = UIFont(name: "Raleway-Regular", size: 15)
         label.textColor = .customBlue
-        
         return label
     }()
     
@@ -140,11 +126,9 @@ class SignUpViewController: UIViewController {
         button.layer.shadowOpacity = 1
         button.layer.shadowOffset = CGSize(width: 0, height: 2)
         button.layer.shadowRadius = 4
-        
         button.addAction(UIAction(handler: { [weak self] _ in
             self?.googleSignInTapped()
         }), for: .touchUpInside)
-        
         return button
     }()
     
@@ -153,11 +137,9 @@ class SignUpViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .white
         button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-        
-        button.addAction(UIAction(handler: {[weak self] _ in
+        button.addAction(UIAction(handler: { [weak self] _ in
             self?.navigationController?.popViewController(animated: true)
         }), for: .touchUpInside)
-        
         return button
     }()
 
@@ -166,6 +148,7 @@ class SignUpViewController: UIViewController {
         setUpUI()
         setUpConstraints()
         viewModel.delegate = self
+        reloadUIForNewLanguage() // Initialize UI with current language
     }
     
     private func setUpUI() {
@@ -250,6 +233,15 @@ class SignUpViewController: UIViewController {
         ])
     }
     
+    private func reloadUIForNewLanguage() {
+        logInLabel.text = LanguageManager.shared.localizedString(forKey: "create_an_account")
+        mailTextField.placeholder = LanguageManager.shared.localizedString(forKey: "email_address")
+        userNameTextField.placeholder = LanguageManager.shared.localizedString(forKey: "username")
+        passwordTextField.placeholder = LanguageManager.shared.localizedString(forKey: "password")
+        signUpButton.setTitle(LanguageManager.shared.localizedString(forKey: "sign_up"), for: .normal)
+        orLabel.text = LanguageManager.shared.localizedString(forKey: "or_log_in")
+    }
+    
     @objc private func togglePasswordVisibility() {
         passwordTextField.isSecureTextEntry.toggle()
         let eyeIcon = passwordTextField.isSecureTextEntry ? "eye" : "eye.slash"
@@ -259,7 +251,6 @@ class SignUpViewController: UIViewController {
     }
     
     private func pressSignUpButton(button: UIButton) {
-        
         guard let email = mailTextField.text,
               let username = userNameTextField.text,
               let password = passwordTextField.text, !email.isEmpty, !username.isEmpty, !password.isEmpty else {
@@ -280,8 +271,7 @@ class SignUpViewController: UIViewController {
         }
     }
 }
-    
-    
+
 extension SignUpViewController: SignUpViewModelDelegate {
     func registrationCompleted(success: Bool, error: Error?) {
         if let error = error {

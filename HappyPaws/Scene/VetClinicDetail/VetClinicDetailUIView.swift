@@ -11,6 +11,7 @@ import CoreLocation
 struct VetClinicDetailUIView: View {
     let clinic: ClinicModel
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject private var languageManager: LanguageManager
     
     var body: some View {
         NavigationView {
@@ -73,7 +74,7 @@ struct VetClinicDetailUIView: View {
                                     .foregroundStyle(Color.black)
                             }
                             
-                            Text("Our Doctors")
+                            Text(languageManager.localizedString(forKey: "our_doctors"))
                                 .font(.headline)
                                 .padding(.top, 10)
                                 .foregroundStyle(Color.black)

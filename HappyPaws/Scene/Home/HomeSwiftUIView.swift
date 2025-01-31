@@ -11,10 +11,11 @@ struct HomeSwiftUIView: View {
     
     @State private var isAddPetPagePresented = false
     @StateObject private var viewModel = HomeViewModel()
+    @EnvironmentObject private var languageManager: LanguageManager
 
     var body: some View {
         NavigationView {
-            VStack() {
+            VStack {
                 HStack {
                     Spacer()
                     Button(action: {
@@ -27,13 +28,14 @@ struct HomeSwiftUIView: View {
                     .padding()
                     .sheet(isPresented: $isAddPetPagePresented) {
                         AddPetUIView(onPetAdded: {
-                            viewModel.fetchPets() 
+                            viewModel.fetchPets()
                         })
+                        .environmentObject(languageManager)
                     }
                 }
                 AdvertisementCarouselView()
                 HStack {
-                    Text("My Pets")
+                    Text(languageManager.localizedString(forKey: "my_pets"))
                         .font(.custom("BebasNeue-Regular", size: 35))
                         .fontWeight(.bold)
                         .foregroundColor(Color.darkRed)
@@ -44,7 +46,7 @@ struct HomeSwiftUIView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         ForEach(viewModel.pets, id: \.name) { pet in
-                            NavigationLink(destination: PetProfileUIView(pet: pet)) {
+                            NavigationLink(destination: PetProfileUIView(pet: pet).environmentObject(languageManager)) {
                                 PetCardView(pet: pet)
                             }
                         }
