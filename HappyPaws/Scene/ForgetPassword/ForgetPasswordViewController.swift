@@ -72,18 +72,27 @@ class ForgetPasswordViewController: UIViewController {
         }), for: .touchUpInside)
         return button
     }()
+    
+    private var progressView: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.color = .black
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
         setUpConstraints()
         viewModel.delegate = self
-        reloadUIForNewLanguage() // Initialize UI with current language
+        reloadUIForNewLanguage()
     }
     
     private func setUpUI() {
         view.addSubview(backgroundImage)
         view.addSubview(viewForFields)
+        view.addSubview(progressView)
         viewForFields.addSubview(resetLabel)
         viewForFields.addSubview(mailTextField)
         viewForFields.addSubview(resetButton)
@@ -131,6 +140,11 @@ class ForgetPasswordViewController: UIViewController {
             backButton.heightAnchor.constraint(equalToConstant: 40),
             backButton.widthAnchor.constraint(equalToConstant: 40)
         ])
+        
+        NSLayoutConstraint.activate([
+            progressView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            progressView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
     
     private func reloadUIForNewLanguage() {
@@ -140,6 +154,7 @@ class ForgetPasswordViewController: UIViewController {
     }
     
     private func resetButtomTapped(button: UIButton) {
+        progressView.startAnimating()
         let email = mailTextField.text ?? ""
         viewModel.resetPassword(email: email)
     }
@@ -147,6 +162,7 @@ class ForgetPasswordViewController: UIViewController {
 
 extension ForgetPasswordViewController: ForgotPasswordViewModelDelegate {
     func sendPasswordResetEmail(success: Bool, error: String?) {
+        progressView.stopAnimating()
         if success {
             AlertManager.showPasswordResetSent(on: self)
         } else if let error = error {

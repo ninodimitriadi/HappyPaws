@@ -288,7 +288,6 @@ class UserProfileViewController: UIViewController {
     private func reloadUIForNewLanguage() {
         print("Reloading UI for Language: \(LanguageManager.shared.currentLanguage)")
         
-        // Update all UI elements with localized strings
         dashboardName.text = LanguageManager.shared.localizedString(forKey: "dashboard")
         resetButton.setTitle(LanguageManager.shared.localizedString(forKey: "reset_password"), for: .normal)
         changeLanguageButton.setTitle(LanguageManager.shared.localizedString(forKey: "change_language"), for: .normal)

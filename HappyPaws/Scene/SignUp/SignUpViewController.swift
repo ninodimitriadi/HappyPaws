@@ -142,19 +142,28 @@ class SignUpViewController: UIViewController {
         }), for: .touchUpInside)
         return button
     }()
+    
+    private var progressView: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.color = .black
+        activityIndicator.hidesWhenStopped = true
+        return activityIndicator
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
         setUpConstraints()
         viewModel.delegate = self
-        reloadUIForNewLanguage() // Initialize UI with current language
+        reloadUIForNewLanguage()
     }
     
     private func setUpUI() {
         view.addSubview(backgroundImage)
         view.addSubview(viewForFields)
         view.addSubview(backButton)
+        view.addSubview(progressView)
         viewForFields.addSubview(logInLabel)
         viewForFields.addSubview(mailTextField)
         viewForFields.addSubview(userNameTextField)
@@ -231,6 +240,11 @@ class SignUpViewController: UIViewController {
             backButton.heightAnchor.constraint(equalToConstant: 40),
             backButton.widthAnchor.constraint(equalToConstant: 40)
         ])
+        
+        NSLayoutConstraint.activate([
+            progressView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            progressView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
     
     private func reloadUIForNewLanguage() {
@@ -258,6 +272,7 @@ class SignUpViewController: UIViewController {
             return
         }
         
+        progressView.startAnimating()
         viewModel.registerUser(username: username, email: email, password: password)
     }
     
@@ -274,6 +289,7 @@ class SignUpViewController: UIViewController {
 
 extension SignUpViewController: SignUpViewModelDelegate {
     func registrationCompleted(success: Bool, error: Error?) {
+        progressView.stopAnimating()
         if let error = error {
             AlertManager.showRegistrationErrorAlert(on: self, with: error)
             return

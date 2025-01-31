@@ -137,17 +137,26 @@ class LogInViewController: UIViewController {
         }), for: .touchUpInside)
         return button
     }()
+    
+    private var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.color = .black
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
         setUpConstraints()
-        reloadUIForNewLanguage() // Initialize UI with current language
+        reloadUIForNewLanguage()
     }
     
     private func setUpUI() {
         view.addSubview(backgroundImage)
         view.addSubview(viewForFields)
+        view.addSubview(activityIndicator)
         viewForFields.addSubview(logInLabel)
         viewForFields.addSubview(mailTextField)
         viewForFields.addSubview(passwordTextField)
@@ -220,6 +229,11 @@ class LogInViewController: UIViewController {
             registerButton.topAnchor.constraint(equalTo: loginWithGoogle.bottomAnchor, constant: 15),
             registerButton.centerXAnchor.constraint(equalTo: viewForFields.centerXAnchor)
         ])
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
     
     private func reloadUIForNewLanguage() {
@@ -244,7 +258,10 @@ class LogInViewController: UIViewController {
         viewModel.email = mailTextField.text ?? ""
         viewModel.password = passwordTextField.text ?? ""
         
+        activityIndicator.startAnimating()
+        
         if !viewModel.validateFields() {
+            activityIndicator.stopAnimating()
             if let emailError = viewModel.emailError {
                 AlertManager.showBasicAlert(on: self, title: "Email Error", message: emailError)
             } else if let passwordError = viewModel.passwordError {
@@ -254,8 +271,10 @@ class LogInViewController: UIViewController {
         }
         
         viewModel.logIn { [weak self] success, error in
+            self?.activityIndicator.stopAnimating()
             if success {
                 self?.navigationController?.pushViewController(TabBarViewController(), animated: false)
+                self?.navigationController?.setNavigationBarHidden(true, animated: false)
             } else {
                 AlertManager.showBasicAlert(on: LogInViewController(), title: error ?? "Error", message: error?.description)
             }
@@ -281,6 +300,6 @@ struct LogInViewControllerWrapper: UIViewControllerRepresentable {
   func updateUIViewController(_ uiViewController: LogInViewController, context: Context) {}
 }
 
-//#Preview {
-//    LogInViewControllerWrapper()
-//}
+#Preview {
+    LogInViewControllerWrapper()
+}
