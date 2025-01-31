@@ -46,7 +46,6 @@ class GroomingSalonViewController: UIViewController, MKMapViewDelegate, CLLocati
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
-        print("Location Manager Started")
     }
 
     private func bindViewModel() {
@@ -60,17 +59,14 @@ class GroomingSalonViewController: UIViewController, MKMapViewDelegate, CLLocati
 
     private func fetchSalons() {
         guard let userLocation = userLocation else {
-            print("User location is not available yet.")
             return
         }
         viewModel.fetchNearbySalons(location: userLocation.coordinate, radius: 100000) 
     }
     private func addSalonAnnotations() {
-        print("Adding salon annotations...")
         mapView.removeAnnotations(mapView.annotations)
         
         for salon in viewModel.salons {
-            print("Adding annotation for salon: \(salon.name), coordinates: \(salon.coordinate.latitude), \(salon.coordinate.longitude), \(salon.phoneNumber)")
             let annotation = CustomAnnotation(salonDetails: salon, coordinate: salon.coordinate)
             mapView.addAnnotation(annotation)
         }

@@ -30,12 +30,10 @@ class PetProfileViewModel: ObservableObject {
             DispatchQueue.main.async {
                 if let error = error {
                     self?.errorMessage = "Error fetching image from Firebase Storage: \(error.localizedDescription)"
-                    print("Error fetching image from Firebase Storage: \(error.localizedDescription)")
                 } else if let data = data, let uiImage = UIImage(data: data) {
                     self?.petImage = uiImage
                 } else {
                     self?.errorMessage = "Failed to decode image data."
-                    print("Failed to decode image data.")
                 }
                 
                 self?.isLoading = false

@@ -22,12 +22,11 @@ class LanguageManager: ObservableObject {
     }
     
     private init() {
-        // Initialize currentLanguage from UserDefaults
         self.currentLanguage = UserDefaults.standard.string(forKey: userDefaultsKey) ?? "en"
     }
     
     func setLanguage(_ language: String) {
-        currentLanguage = language // This will trigger UI updates
+        currentLanguage = language
     }
     
     func localizedString(forKey key: String) -> String {

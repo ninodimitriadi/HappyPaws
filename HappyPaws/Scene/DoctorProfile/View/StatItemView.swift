@@ -17,21 +17,21 @@ struct RoundItemView: View {
         VStack(spacing: 5) {
             ZStack {
                 Circle()
+                    .fill(.mainYellow)
                     .frame(width: 50)
-                    .foregroundStyle(.gray)
                     .opacity(0.3)
-                Image(iconName)
+                Image(systemName: iconName)
                     .resizable()
                     .scaledToFill()
                     .frame(width: 25, height: 25)
-                    .foregroundStyle(.black)
+                    .foregroundColor(.mainYellow)
             }
             Text(value)
-                .font(.headline)
+                .font(.title3)
                 .foregroundColor(.black)
             Text(label)
-                .font(.subheadline)
-                .foregroundColor(.gray)
+                .font(.caption)
+                .foregroundColor(.black)
         }
     }
 }

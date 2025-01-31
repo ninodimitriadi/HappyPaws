@@ -15,10 +15,10 @@ class ReminderCell: UICollectionViewCell {
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 12
-        view.layer.shadowColor = UIColor.gray.withAlphaComponent(0.2).cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 22)
-        view.layer.shadowOpacity = 1.0
-        view.layer.shadowRadius = 11.45
+        view.layer.shadowColor = UIColor.black.withAlphaComponent(0.15).cgColor
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowOpacity = 0.4
+        view.layer.shadowRadius = 8.0
         view.layer.masksToBounds = false
         view.translatesAutoresizingMaskIntoConstraints = false
         return view

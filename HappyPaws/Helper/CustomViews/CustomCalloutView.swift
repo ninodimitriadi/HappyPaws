@@ -35,10 +35,11 @@ class CustomCalloutView: UIView {
 
         backgroundColor = .white
         layer.cornerRadius = 12
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.2
-        layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.shadowRadius = 4
+        layer.shadowColor = UIColor.gray.withAlphaComponent(0.2).cgColor
+        layer.shadowOffset = CGSize(width: 0, height: 22.9)
+        layer.shadowOpacity = 1.0
+        layer.shadowRadius = 11.45
+        layer.masksToBounds = false
 
         nameLabel.font = UIFont.boldSystemFont(ofSize: 16)
         nameLabel.textColor = .black

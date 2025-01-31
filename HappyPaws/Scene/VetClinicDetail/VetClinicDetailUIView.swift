@@ -104,7 +104,7 @@ struct VetClinicDetailUIView: View {
                         .padding(.top, 50)
                 }
             }
-            .background(Color.white)
+            .background(Color.backgroundGray)
             .edgesIgnoringSafeArea(.top)
         }
     }

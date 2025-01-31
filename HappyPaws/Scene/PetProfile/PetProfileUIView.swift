@@ -67,7 +67,6 @@ struct PetProfileUIView: View {
             HStack {
                 Button(action: {
                     isAddRemainderPresented.toggle()
-                    print("reminde")
                 }) {
                     HStack {
                         Image("addremainder")

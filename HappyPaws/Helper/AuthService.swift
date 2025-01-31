@@ -108,7 +108,6 @@ class AuthService {
             
             var pets: [PetModel] = []
             if let petsData = data["pets"] as? [[String: Any]] {
-                // Use compactMap to skip invalid pets
                 pets = petsData.compactMap { petDict in
                     guard let name = petDict["name"] as? String,
                           let breed = petDict["breed"] as? String,

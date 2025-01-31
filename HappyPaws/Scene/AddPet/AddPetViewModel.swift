@@ -34,13 +34,11 @@ class AddPetViewModel: ObservableObject {
         guard let age = Int(petAge),
               let weight = Int(petWeight),
               let height = Int(petHeight) else {
-            print("Please enter valid numeric values for age, weight, and height.")
             completion(false)
             return
         }
         
         guard let userID = Auth.auth().currentUser?.uid else {
-            print("Error: User not logged in")
             completion(false)
             return
         }
@@ -51,7 +49,6 @@ class AddPetViewModel: ObservableObject {
                 if let url = url {
                     imageURL = url
                 } else {
-                    print("Error uploading image")
                     completion(false)
                     return
                 }
@@ -154,7 +151,6 @@ class AddPetViewModel: ObservableObject {
                 }
                 
                 if let downloadURL = url {
-                    print("Image uploaded successfully! Download URL: \(downloadURL)")
                     completion(downloadURL.absoluteString)
                 }
             }

@@ -36,7 +36,6 @@ class AddReminderViewModel: ObservableObject {
             
             completion(true)
         } catch {
-            print("Error saving reminder: \(error.localizedDescription)")
             completion(false)
         }
     }
