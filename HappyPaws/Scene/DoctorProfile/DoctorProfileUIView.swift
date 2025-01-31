@@ -13,6 +13,7 @@ struct DoctorProfileUIView: View {
     @StateObject private var viewModel = DoctorProfileViewModel()
     @State private var showBookingView = false
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject private var languageManager: LanguageManager
     
     var body: some View {
         NavigationView {
@@ -64,12 +65,12 @@ struct DoctorProfileUIView: View {
                 .padding(.horizontal, 20)
                 
                 HStack(spacing: 50) {
-                    RoundItemView(iconName: "experience", value: "\(doctor.experience)+", label: "Year")
-                    RoundItemView(iconName: "star", value: "\(doctor.rating)", label: "Rating")
+                    RoundItemView(iconName: "experience", value: "\(doctor.experience)+", label: languageManager.localizedString(forKey: "year"))
+                    RoundItemView(iconName: "star", value: "\(doctor.rating)", label: languageManager.localizedString(forKey: "rating"))
                 }
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("About Me")
+                    Text(languageManager.localizedString(forKey: "about_me"))
                         .font(Font.custom("Inter", size: 16))
                         .fontWeight(.semibold)
                         .foregroundStyle(.black)
@@ -82,7 +83,7 @@ struct DoctorProfileUIView: View {
                 Button(action: {
                     showBookingView.toggle()
                 }) {
-                    Text("Book Appointment")
+                    Text(languageManager.localizedString(forKey: "book_appoimtment"))
                         .font(.headline)
                         .foregroundColor(.white)
                         .frame(width: 298, height: 50)

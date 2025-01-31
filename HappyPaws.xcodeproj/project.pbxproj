@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F2269202D4C0F0E005C5BEF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3F22691E2D4C0F0E005C5BEF /* Localizable.strings */; };
 		3FBEF3DB2D36AD1E00AB45C5 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3FBEF3DA2D36AD1E00AB45C5 /* FirebaseCore */; };
 		3FBEF3DD2D36AD6500AB45C5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3FBEF3DC2D36AD6500AB45C5 /* FirebaseAnalytics */; };
 		3FBEF3DF2D36AD6500AB45C5 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 3FBEF3DE2D36AD6500AB45C5 /* FirebaseAnalyticsOnDeviceConversion */; };
@@ -36,6 +37,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3F22691F2D4C0F0E005C5BEF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3F2269212D4C0FDE005C5BEF /* ka */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ka; path = ka.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3F75893D2D34E48700DC60EF /* HappyPaws.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HappyPaws.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -100,6 +103,7 @@
 		3F7589342D34E48700DC60EF = {
 			isa = PBXGroup;
 			children = (
+				3F22691E2D4C0F0E005C5BEF /* Localizable.strings */,
 				3F75893F2D34E48700DC60EF /* HappyPaws */,
 				3FBEF3D92D36AC7500AB45C5 /* Frameworks */,
 				3F75893E2D34E48700DC60EF /* Products */,
@@ -193,6 +197,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ka,
 			);
 			mainGroup = 3F7589342D34E48700DC60EF;
 			minimizedProjectReferenceProxies = 1;
@@ -215,6 +220,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F2269202D4C0F0E005C5BEF /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,6 +235,18 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		3F22691E2D4C0F0E005C5BEF /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3F22691F2D4C0F0E005C5BEF /* en */,
+				3F2269212D4C0FDE005C5BEF /* ka */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		3F7589512D34E48800DC60EF /* Debug */ = {

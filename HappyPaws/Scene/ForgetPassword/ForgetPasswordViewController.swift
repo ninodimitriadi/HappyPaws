@@ -17,7 +17,6 @@ class ForgetPasswordViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "pets")
         imageView.contentMode = .scaleAspectFill
-        
         return imageView
     }()
     
@@ -27,24 +26,20 @@ class ForgetPasswordViewController: UIViewController {
         view.backgroundColor = .white
         view.layer.opacity = 0.9
         view.layer.cornerRadius = 10
-        
         return view
     }()
     
     private var resetLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Reset Password!"
         label.font = UIFont(name: "Raleway-Bold", size: 30)
         label.textColor = .customBlue
-        
         return label
     }()
     
     private lazy var mailTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = " Email Address"
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.textAlignment = .left
         textField.layer.cornerRadius = 5
@@ -54,19 +49,16 @@ class ForgetPasswordViewController: UIViewController {
         textField.layer.shadowOpacity = 0.5
         textField.layer.shadowOffset = CGSize(width: 0, height: 2)
         textField.layer.shadowRadius = 4
-
         return textField
     }()
     
     private lazy var resetButton: UIButton = {
         let button = UIButton()
-        button.configureButton(title: "Log in", fontSize: 17, backgroundColor: .customBlue)
+        button.configureButton(title: "", fontSize: 17, backgroundColor: .customBlue)
         button.layer.cornerRadius = 5
-        
         button.addAction(UIAction(handler: { [weak self] _ in
             self?.resetButtomTapped(button: button)
         }), for: .touchUpInside)
-        
         return button
     }()
     
@@ -75,11 +67,9 @@ class ForgetPasswordViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .white
         button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-        
-        button.addAction(UIAction(handler: {[weak self] _ in
+        button.addAction(UIAction(handler: { [weak self] _ in
             self?.navigationController?.popViewController(animated: true)
         }), for: .touchUpInside)
-        
         return button
     }()
 
@@ -88,6 +78,7 @@ class ForgetPasswordViewController: UIViewController {
         setUpUI()
         setUpConstraints()
         viewModel.delegate = self
+        reloadUIForNewLanguage() // Initialize UI with current language
     }
     
     private func setUpUI() {
@@ -101,7 +92,6 @@ class ForgetPasswordViewController: UIViewController {
     }
     
     private func setUpConstraints() {
-        
         NSLayoutConstraint.activate([
             backgroundImage.topAnchor.constraint(equalTo: view.topAnchor),
             backgroundImage.leftAnchor.constraint(equalTo: view.leftAnchor),
@@ -143,11 +133,16 @@ class ForgetPasswordViewController: UIViewController {
         ])
     }
     
+    private func reloadUIForNewLanguage() {
+        resetLabel.text = LanguageManager.shared.localizedString(forKey: "reset_password")
+        mailTextField.placeholder = LanguageManager.shared.localizedString(forKey: "email_address")
+        resetButton.setTitle(LanguageManager.shared.localizedString(forKey: "reset_password"), for: .normal)
+    }
+    
     private func resetButtomTapped(button: UIButton) {
         let email = mailTextField.text ?? ""
         viewModel.resetPassword(email: email)
     }
-
 }
 
 extension ForgetPasswordViewController: ForgotPasswordViewModelDelegate {

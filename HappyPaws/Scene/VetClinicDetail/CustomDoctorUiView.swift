@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CustomDoctorUiView: View {
     var doctor: DoctorModel
+    @EnvironmentObject private var languageManager: LanguageManager
     
     var body: some View {
         HStack {
@@ -56,7 +57,7 @@ struct CustomDoctorUiView: View {
                 Text("\(doctor.status)")
                     .font(Font.custom("Poppins-LightItalic", size: 15))
                     .foregroundStyle(.black)
-                Text("Experience: \(doctor.experience) year")
+                Text("\(languageManager.localizedString(forKey: "experience")): \(doctor.experience) \(languageManager.localizedString(forKey: "year"))")
                     .font(Font.custom("Poppins-Regular", size: 15))
                     .foregroundStyle(.black)
             }

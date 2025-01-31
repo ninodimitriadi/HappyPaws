@@ -11,6 +11,7 @@ import SwiftUI
 struct BookGroomingAppointmentView: View {
     var salon: GroomingSalonModel
     @ObservedObject var viewModel: GroomingDetailsViewModel
+    @EnvironmentObject private var languageManager: LanguageManager
     @Environment(\.presentationMode) var presentationMode
     @State private var bookingMessage: String = ""
     @State private var showAlert = false
@@ -18,16 +19,17 @@ struct BookGroomingAppointmentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Choose Appointment Time")
+                Text(languageManager.localizedString(forKey: "choose_appointment_time"))
                     .font(.title)
                     .fontWeight(.bold)
                     .padding()
 
                 DatePicker("Select Date & Time", selection: $viewModel.selectedDate, displayedComponents: [.date, .hourAndMinute])
                     .datePickerStyle(GraphicalDatePickerStyle())
+                    .environment(\.locale, Locale(identifier: languageManager.currentLanguage))
                     .padding()
 
-                Button("Confirm Booking") {
+                Button(languageManager.localizedString(forKey: "confirm_booking")) {
                     confirmBooking()
                 }
                 .padding()
@@ -37,8 +39,8 @@ struct BookGroomingAppointmentView: View {
                 .cornerRadius(10)
                 .padding(.top, 20)
             }
-            .navigationBarTitle("Book Grooming", displayMode: .inline)
-            .navigationBarItems(leading: Button("Close") {
+            .navigationBarTitle(languageManager.localizedString(forKey: "book_Grooming"), displayMode: .inline)
+            .navigationBarItems(leading: Button(languageManager.localizedString(forKey: "close")) {
                 presentationMode.wrappedValue.dismiss()
             })
             .alert(isPresented: $showAlert) {

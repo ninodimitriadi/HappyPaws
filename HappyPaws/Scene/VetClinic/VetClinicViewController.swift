@@ -59,6 +59,7 @@ class VetClinicViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     private func navigateToClinicDetail() {
         guard let selectedClinic = selectedClinic else { return }
         let clinicDetailView = VetClinicDetailUIView(clinic: selectedClinic)
+            .environmentObject(LanguageManager.shared)
         let hostingController = UIHostingController(rootView: clinicDetailView)
         hostingController.modalPresentationStyle = .fullScreen
         present(hostingController, animated: true, completion: nil)
@@ -126,7 +127,7 @@ class VetClinicViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     private func calculateDistance(to clinic: ClinicModel) -> String {
         guard let userLocation = userLocation else { return "N/A" }
         let distance = userLocation.distance(from: CLLocation(latitude: clinic.coordinate.latitude, longitude: clinic.coordinate.longitude))
-        return String(format: "%.1f km", distance / 1000)
+        return String(format:  "%.1f \(LanguageManager.shared.localizedString(forKey: "km"))", distance / 1000)
     }
 }
 

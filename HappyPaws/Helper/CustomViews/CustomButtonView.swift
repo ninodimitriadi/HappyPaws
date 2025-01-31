@@ -7,9 +7,8 @@
 
 import UIKit
 
-func createButton(title: String, iconName: String) -> UIButton {
+func createButton(iconName: String) -> UIButton {
     let button = UIButton(type: .system)
-    button.setTitle(title, for: .normal)
     button.setTitleColor(.black, for: .normal)
     button.titleLabel?.font = UIFont(name: "Poppins-Regular", size: 18)
     button.setImage(UIImage(systemName: iconName), for: .normal)

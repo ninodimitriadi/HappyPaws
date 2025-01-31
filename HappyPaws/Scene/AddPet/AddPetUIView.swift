@@ -10,6 +10,7 @@ import PhotosUI
 
 struct AddPetUIView: View {
     @StateObject private var viewModel = AddPetViewModel()
+    @EnvironmentObject var languageManager: LanguageManager
     @Environment(\.dismiss) private var dismiss
     var onPetAdded: (() -> Void)?
     
@@ -49,13 +50,13 @@ struct AddPetUIView: View {
                     }
                     ScrollView {
                         VStack(spacing: 16) {
-                            CustomTextField(placeholder: "Pet Name", text: $viewModel.petName)
-                            CustomTextField(placeholder: "Pet Breed", text: $viewModel.petBreed)
-                            CustomTextField(placeholder: "Pet Age", text: $viewModel.petAge, keyboardType: .numberPad)
+                            CustomTextField(placeholder: languageManager.localizedString(forKey: "pet_name"), text: $viewModel.petName)
+                            CustomTextField(placeholder: languageManager.localizedString(forKey: "pet_breed"), text: $viewModel.petBreed)
+                            CustomTextField(placeholder: languageManager.localizedString(forKey: "pet_age"), text: $viewModel.petAge, keyboardType: .numberPad)
                             GenderPicker(selectedGender: $viewModel.petGender)
-                            CustomTextField(placeholder: "Pet Weight (kg)", text: $viewModel.petWeight, keyboardType: .decimalPad)
-                            CustomTextField(placeholder: "Pet Height (cm)", text: $viewModel.petHeight, keyboardType: .decimalPad)
-                            CustomTextField(placeholder: "Pet Color", text: $viewModel.petColor)
+                            CustomTextField(placeholder: languageManager.localizedString(forKey: "pet_weight_kg"), text: $viewModel.petWeight, keyboardType: .decimalPad)
+                            CustomTextField(placeholder: languageManager.localizedString(forKey: "pet_height_cm"), text: $viewModel.petHeight, keyboardType: .decimalPad)
+                            CustomTextField(placeholder: languageManager.localizedString(forKey: "pet_color"), text: $viewModel.petColor)
                         }
                         .padding(.horizontal, 20)
                         Button(action: {
@@ -66,7 +67,7 @@ struct AddPetUIView: View {
                                 }
                             }
                         }) {
-                            Text("Save Pet")
+                            Text(languageManager.localizedString(forKey: "save_pet"))
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)

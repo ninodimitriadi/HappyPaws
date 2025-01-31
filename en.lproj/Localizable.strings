@@ -1,0 +1,72 @@
+/* 
+  Localizable.strings
+  HappyPaws
+
+  Created by nino on 1/30/25.
+  
+*/
+
+"welcome_text" = "Welcome Back";
+"email_address" = "Email Address";
+"password" = "Password";
+"log_in" = "Log in";
+"sign_up" = "Sign Up";
+"forgotten_password" = "Forgotten password?";
+"or_log_in" = "Or Log in with";
+"new_in" = "New to HappyPaws? Register";
+"reset_password" = "Reset Password";
+"create_an_account" = "Create an account";
+"username" = "Username";
+"my_pets" = "My Pets";
+"about" = "About";
+"weight" = "Weight";
+"height" = "Height";
+"color" = "Color";
+"add_a_reminder" = "Add a Reminder";
+"cancle" = "Cancle";
+"title" = "TITLE";
+"enter_title" = "Enter Title";
+"note" = "NOTE";
+"enter_note" = "Enter notes";
+"set_deu_date" = "Set Due Date";
+"due_date" = "Due Date";
+"save_reminder" = "Save Reminder";
+"pet_name" = "Pet Name";
+"pet_breed" = "Pet Breed";
+"pet_age" = "Pet Age";
+"gender" = "Gender";
+"female" = "Female";
+"male" = "Male";
+"pet_weight_kg" = "Pet Weight (kg)";
+"pet_height_cm" = "Pet Height (cm)";
+"pet_color" = "Pet Color";
+"save_pet" = "Save Pet";
+"km" = "Km";
+"our_doctors" = "Out Doctors";
+"experience" = "Experience";
+"year" = "year";
+"rating" = "Rating";
+"about_me" = "About Me";
+"book_appoimtment" = "Book Appoimtment";
+"choose_appointment_time" = "Choose Appointment Time";
+"time" = "Time";
+"confirm_booking" = "Confirm Booking";
+"opening_hours" = "Opening Hours";
+"hairstyle" = "HAIRSTYLE";
+"washing_brushing" = "WASHING BRUSHING";
+"removal_of_parasites" = "REMOVAL OF PARASITES";
+"book_Grooming" = "Book Grooming";
+"save" = "Save";
+"dashboard" = "Dashboard";
+"reset_password" = "Reset Password";
+"change_language" = "Change Language";
+"add_reminder" = "Add Reminder";
+"reminders" = "Reminders";
+"log_out" = "Log Out";
+"home" = "Home";
+"health" = "Health";
+"grooming" = "Grooming";
+"profile" = "Profile";
+"profile_saved_successfully" = "Profile saved successfully!";
+"close" = "Close";
+

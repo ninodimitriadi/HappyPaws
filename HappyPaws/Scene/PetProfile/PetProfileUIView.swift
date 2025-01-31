@@ -12,6 +12,7 @@ struct PetProfileUIView: View {
     var pet: PetModel
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = PetProfileViewModel()
+    @EnvironmentObject var languageManager: LanguageManager
     @State private var isAddRemainderPresented = false
     
     var body: some View {
@@ -51,13 +52,13 @@ struct PetProfileUIView: View {
                 HStack {
                     Image("petPaw")
                         .frame(width: 27, height: 27)
-                    Text("About \(pet.name)")
+                    Text("\(languageManager.localizedString(forKey: "about")) \(pet.name)")
                         .font(Font.custom("Poppins-Bold", size: 19))
                 }
                 HStack {
-                    InfoCardView(title: "Weight", value: "\(pet.weight) Kg")
-                    InfoCardView(title: "Height", value: "\(pet.height) Cm")
-                    InfoCardView(title: "Color", value: "\(pet.color)")
+                    InfoCardView(title: languageManager.localizedString(forKey: "weight"), value: "\(pet.weight) Kg")
+                    InfoCardView(title: languageManager.localizedString(forKey: "height"), value: "\(pet.height) Cm")
+                    InfoCardView(title: languageManager.localizedString(forKey: "color"), value: "\(pet.color)")
                 }
             }
             .padding(.horizontal)
@@ -74,7 +75,7 @@ struct PetProfileUIView: View {
                             .scaledToFill()
                             .frame(width: 20, height: 20)
                             .foregroundStyle(.black)
-                        Text("Add a Reminder")
+                        Text(languageManager.localizedString(forKey: "add_a_reminder"))
                             .font(Font.custom("Poppins-Regular", size: 16))
                             .foregroundColor(.black)
                     }

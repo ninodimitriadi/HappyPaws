@@ -17,7 +17,10 @@ class TabBarViewController: UITabBarController {
     }
 
     private func setupTabBar() {
-        let swiftUIHomeVC = UIHostingController(rootView: HomeSwiftUIView())
+        let swiftUIHomeVC = UIHostingController(
+            rootView: HomeSwiftUIView()
+                .environmentObject(LanguageManager.shared)
+        )
         let homeNavController = UINavigationController(rootViewController: swiftUIHomeVC)
         homeNavController.isNavigationBarHidden = false
         homeNavController.tabBarItem = configureTabBarItem(

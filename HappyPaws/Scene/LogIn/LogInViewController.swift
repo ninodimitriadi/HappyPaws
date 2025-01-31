@@ -20,7 +20,6 @@ class LogInViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "LogInBackground")
         imageView.contentMode = .scaleAspectFill
-        
         return imageView
     }()
     
@@ -30,24 +29,20 @@ class LogInViewController: UIViewController {
         view.backgroundColor = .white
         view.layer.opacity = 0.9
         view.layer.cornerRadius = 10
-        
         return view
     }()
     
     private var logInLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Welcome Back!"
         label.font = UIFont(name: "Raleway-Bold", size: 30)
         label.textColor = .customBlue
-        
         return label
     }()
     
     private lazy var mailTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = " Email Address"
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.textAlignment = .left
         textField.layer.cornerRadius = 5
@@ -57,14 +52,12 @@ class LogInViewController: UIViewController {
         textField.layer.shadowOpacity = 0.5
         textField.layer.shadowOffset = CGSize(width: 0, height: 2)
         textField.layer.shadowRadius = 4
-
         return textField
     }()
     
     private lazy var passwordTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = " Password"
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.textAlignment = .left
         textField.isSecureTextEntry = true
@@ -93,33 +86,28 @@ class LogInViewController: UIViewController {
     
     private lazy var loginButton: UIButton = {
         let button = UIButton()
-        button.configureButton(title: "Log in", fontSize: 17, backgroundColor: .customBlue)
+        button.configureButton(title: "", fontSize: 17, backgroundColor: .customBlue)
         button.layer.cornerRadius = 5
-        
         button.addAction(UIAction(handler: { [weak self] _ in
             self?.pressLogInButton(button: button)
         }), for: .touchUpInside)
-        
         return button
     }()
 
     private lazy var forgetPasswordButton: UIButton = {
         let button = UIButton()
-        button.configureButton(title: "Forgotten password?", fontSize: 13, titleColor: .customBlue, font: "Raleway-Regular")
+        button.configureButton(title: "", fontSize: 13, titleColor: .customBlue, font: "Raleway-Regular")
         button.addAction(UIAction(handler: { [weak self] _ in
             self?.navigationController?.pushViewController(ForgetPasswordViewController(), animated: true)
         }), for: .touchUpInside)
-        
         return button
     }()
     
     private lazy var orLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "OR Log In with"
         label.font = UIFont(name: "Raleway-Regular", size: 15)
         label.textColor = .customBlue
-        
         return label
     }()
     
@@ -135,18 +123,15 @@ class LogInViewController: UIViewController {
         button.layer.shadowOpacity = 1
         button.layer.shadowOffset = CGSize(width: 0, height: 2)
         button.layer.shadowRadius = 4
-        
         button.addAction(UIAction(handler: { [weak self] _ in
             self?.googleSignInTapped()
         }), for: .touchUpInside)
-        
         return button
     }()
     
     private lazy var registerButton: UIButton = {
         let button = UIButton()
-        button.configureButton(title: "New to HappyPaws? Register", fontSize: 13, titleColor: .customBlue, font: "Raleway-Regular")
-
+        button.configureButton(title: "", fontSize: 13, titleColor: .customBlue, font: "Raleway-Regular")
         button.addAction(UIAction(handler: { [weak self] _ in
             self?.navigationController?.pushViewController(SignUpViewController(), animated: true)
         }), for: .touchUpInside)
@@ -157,6 +142,7 @@ class LogInViewController: UIViewController {
         super.viewDidLoad()
         setUpUI()
         setUpConstraints()
+        reloadUIForNewLanguage() // Initialize UI with current language
     }
     
     private func setUpUI() {
@@ -236,6 +222,16 @@ class LogInViewController: UIViewController {
         ])
     }
     
+    private func reloadUIForNewLanguage() {
+        logInLabel.text = LanguageManager.shared.localizedString(forKey: "welcome_text")
+        mailTextField.placeholder = LanguageManager.shared.localizedString(forKey: "email_address")
+        passwordTextField.placeholder = LanguageManager.shared.localizedString(forKey: "password")
+        loginButton.setTitle(LanguageManager.shared.localizedString(forKey: "log_in"), for: .normal)
+        forgetPasswordButton.setTitle(LanguageManager.shared.localizedString(forKey: "forgotten_password"), for: .normal)
+        orLabel.text = LanguageManager.shared.localizedString(forKey: "or_log_in")
+        registerButton.setTitle(LanguageManager.shared.localizedString(forKey: "new_in"), for: .normal)
+    }
+    
     @objc private func togglePasswordVisibility() {
         passwordTextField.isSecureTextEntry.toggle()
         let eyeIcon = passwordTextField.isSecureTextEntry ? "eye" : "eye.slash"
@@ -285,6 +281,6 @@ struct LogInViewControllerWrapper: UIViewControllerRepresentable {
   func updateUIViewController(_ uiViewController: LogInViewController, context: Context) {}
 }
 
-#Preview {
-    LogInViewControllerWrapper()
-}
+//#Preview {
+//    LogInViewControllerWrapper()
+//}
