@@ -34,10 +34,8 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
-    // MARK: - User Profile Methods
     func uploadProfileImage(_ image: UIImage) {
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
-            print("Unable to convert image to data")
+        guard let imageData = image.jpegData(compressionQuality: 0.4) else {
             return
         }
         
@@ -67,7 +65,6 @@ class UserProfileViewModel: ObservableObject {
 
     private func updateUserProfileImageURL(_ url: URL) {
         guard let userID = Auth.auth().currentUser?.uid else {
-            print("No user is logged in")
             return
         }
 
@@ -78,7 +75,6 @@ class UserProfileViewModel: ObservableObject {
                 print("Failed to update Firestore: \(error.localizedDescription)")
                 self?.onError?(error)
             } else {
-                print("Profile image URL updated successfully")
                 self?.onImageUploaded?(url)
             }
         }
@@ -93,11 +89,9 @@ class UserProfileViewModel: ObservableObject {
         let db = Firestore.firestore()
         db.collection("users").document(currentUser.uid).getDocument { document, error in
             if let error = error {
-                print("Failed to fetch user: \(error.localizedDescription)")
                 completion(nil)
             } else {
                 guard let document = document, document.exists else {
-                    print("User document does not exist")
                     completion(nil)
                     return
                 }
@@ -123,7 +117,6 @@ class UserProfileViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Reminder Management
     func requestAccess(completion: @escaping (Bool) -> Void) {
         eventStore.requestAccess(to: .reminder) { granted, error in
             DispatchQueue.main.async {
@@ -181,7 +174,6 @@ class UserProfileViewModel: ObservableObject {
                     UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
                     completion(true)
                 } catch {
-                    print("Error deleting reminder from EventKit: \(error.localizedDescription)")
                     completion(false)
                 }
             } else {
@@ -190,20 +182,16 @@ class UserProfileViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Delete Reminder
     func deleteReminder(at index: Int) {
         let reminderToDelete = reminders[index]
         
-        // Remove from EventKit
         deleteReminderFromEventKit(withId: reminderToDelete.calendarItemIdentifier) { [weak self] success in
             if success {
-                // Remove the reminder from the reminders array
                 DispatchQueue.main.async {
                     self?.reminders.remove(at: index)
-                    self?.onRemindersUpdated?() // Notify the view to update
+                    self?.onRemindersUpdated?()
                 }
             } else {
-                print("Failed to delete reminder")
                 self?.onError?(NSError(domain: "UserProfileViewModel", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to delete reminder"]))
             }
         }

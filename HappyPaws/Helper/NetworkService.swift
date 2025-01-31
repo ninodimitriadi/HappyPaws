@@ -21,7 +21,6 @@ class NetworkService {
 
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
-                print("Error fetching data: \(error?.localizedDescription ?? "Unknown error")")
                 completion(nil)
                 return
             }
@@ -29,8 +28,6 @@ class NetworkService {
             do {
                 if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                    let results = json["results"] as? [[String: Any]] {
-                    print("api key ", self.apiKey)
-                    print("API Response: \(json)")
 
                     var salons: [GroomingSalonModel] = []
                     for result in results {

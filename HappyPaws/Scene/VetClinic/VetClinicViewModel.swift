@@ -15,7 +15,6 @@ class VetClinicViewModel {
     func fetchClinics(completion: @escaping ([ClinicModel]) -> Void) {
         db.collection("vetClinic").getDocuments { snapshot, error in
             if let error = error {
-                print("Error fetching clinics: \(error.localizedDescription)")
                 completion([])
                 return
             }
@@ -40,7 +39,6 @@ class VetClinicViewModel {
                     let image = data["image"] as? String,
                     let doctorArray = data["doctor"] as? [[String: Any]]
                 else {
-                    print("Invalid data in document: \(document.documentID)")
                     continue
                 }
 
@@ -57,7 +55,6 @@ class VetClinicViewModel {
                         let info = doctorData["info"] as? String,
                         let rating = doctorData["rating"] as? Double
                     else {
-                        print("Invalid doctor data in clinic: \(title)")
                         continue
                     }
 

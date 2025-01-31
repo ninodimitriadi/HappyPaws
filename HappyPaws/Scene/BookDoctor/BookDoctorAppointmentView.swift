@@ -33,7 +33,7 @@ struct BookDoctorAppointmentView: View {
                 }
                 .padding()
                 .frame(width: 200, height: 50)
-                .background(Color.green)
+                .background(Color("MainYellow").opacity(0.8))
                 .foregroundColor(.white)
                 .cornerRadius(10)
                 .padding(.top, 20)

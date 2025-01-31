@@ -134,7 +134,7 @@ class UserProfileViewController: UIViewController {
         view.backgroundColor = .white
         
         let headerView = UIView()
-        headerView.backgroundColor = .darkBlue.withAlphaComponent(0.9)
+        headerView.backgroundColor = .cardBeige
         headerView.layer.cornerRadius = 40
         headerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerView)
@@ -176,7 +176,7 @@ class UserProfileViewController: UIViewController {
             remindersCollectionView.topAnchor.constraint(equalTo: reminderLabel.bottomAnchor),
             remindersCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             remindersCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            remindersCollectionView.heightAnchor.constraint(equalToConstant: 120),
+            remindersCollectionView.heightAnchor.constraint(equalToConstant: 130),
             
             logoutButton.topAnchor.constraint(equalTo: remindersCollectionView.bottomAnchor, constant: 45),
             logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -220,7 +220,6 @@ class UserProfileViewController: UIViewController {
         }
 
         viewModel.onError = { [weak self] error in
-            print("Error: \(error.localizedDescription)")
             
             let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -252,7 +251,6 @@ class UserProfileViewController: UIViewController {
     
     @objc private func saveProfileTapped() {
         guard let image = profileImageView.image else {
-            print("No image to upload")
             return
         }
         viewModel.uploadProfileImage(image)
@@ -286,8 +284,6 @@ class UserProfileViewController: UIViewController {
     }
     
     private func reloadUIForNewLanguage() {
-        print("Reloading UI for Language: \(LanguageManager.shared.currentLanguage)")
-        
         dashboardName.text = LanguageManager.shared.localizedString(forKey: "dashboard")
         resetButton.setTitle(LanguageManager.shared.localizedString(forKey: "reset_password"), for: .normal)
         changeLanguageButton.setTitle(LanguageManager.shared.localizedString(forKey: "change_language"), for: .normal)
@@ -324,7 +320,6 @@ class UserProfileViewController: UIViewController {
     private func loadCurrentUser() {
         viewModel.fetchCurrentUser { [weak self] user in
             guard let user = user else {
-                print("Failed to load user data")
                 return
             }
             
@@ -341,7 +336,6 @@ class UserProfileViewController: UIViewController {
     private func loadImage(from url: URL) {
         let task = URLSession.shared.dataTask(with: url) { data, _, error in
             if let error = error {
-                print("Failed to load image: \(error.localizedDescription)")
                 return
             }
             

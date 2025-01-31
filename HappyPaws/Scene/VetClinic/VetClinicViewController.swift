@@ -67,7 +67,6 @@ class VetClinicViewController: UIViewController, MKMapViewDelegate, CLLocationMa
 
     private func addClinicPins() {
         viewModel.fetchClinics { [weak self] clinics in
-            print("Fetched clinics: \(clinics.count)")
             DispatchQueue.main.async {
                 self?.mapView.addAnnotations(clinics)
             }

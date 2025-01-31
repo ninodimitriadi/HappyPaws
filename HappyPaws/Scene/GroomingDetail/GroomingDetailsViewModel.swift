@@ -16,7 +16,7 @@ class GroomingDetailsViewModel: ObservableObject {
     @Published var selectedDate: Date = Date()
 
     public func bookGroomingAppointment(for salonID: String, startTime: Date, completion: @escaping (Bool, String) -> Void) {
-        let appointmentDuration: TimeInterval = 60 * 60 // 1 hour duration
+        let appointmentDuration: TimeInterval = 60 * 60
         let endTime = startTime.addingTimeInterval(appointmentDuration)
 
         db.collection("Grooming appointments")
@@ -34,7 +34,6 @@ class GroomingDetailsViewModel: ObservableObject {
                         let existingEndTime = (data["endTime"] as? Timestamp)?.dateValue()
 
                         if let existingStartTime = existingStartTime, let existingEndTime = existingEndTime {
-                            // Check if the new appointment overlaps with the existing one
                             if (startTime < existingEndTime && endTime > existingStartTime) {
                                 completion(false, "This time slot is already booked.")
                                 return

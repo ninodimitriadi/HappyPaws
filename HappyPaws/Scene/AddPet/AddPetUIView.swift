@@ -16,7 +16,7 @@ struct AddPetUIView: View {
     
     var body: some View {
         ZStack {
-            Color.mainYellow
+            Color.backgroundGray
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
@@ -58,7 +58,7 @@ struct AddPetUIView: View {
                             CustomTextField(placeholder: languageManager.localizedString(forKey: "pet_height_cm"), text: $viewModel.petHeight, keyboardType: .decimalPad)
                             CustomTextField(placeholder: languageManager.localizedString(forKey: "pet_color"), text: $viewModel.petColor)
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 10)
                         Button(action: {
                             viewModel.savePet { success in
                                 if success {
@@ -72,15 +72,16 @@ struct AddPetUIView: View {
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color.orange)
+                                .background(Color("MainYellow"))
                                 .cornerRadius(10)
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.top, 20)
+                        .padding(.horizontal, 10)
                     }
                     .padding()
                     .background(Color.white)
                     .cornerRadius(20)
-                    .shadow(radius: 10)
+                    .shadow(color: Color.black.opacity(0.03), radius: 4, x: 0, y: 4)
                     .padding()
                 }
             }

@@ -20,7 +20,6 @@ struct AdvertisementCarouselView: View {
 
     var body: some View {
         VStack {
-            // **Carousel (Auto-Scrolling Enabled)**
             TabView(selection: $currentPage) {
                 ForEach(sampleAds.indices, id: \.self) { index in
                     AdCardView(title: sampleAds[index].0, text: sampleAds[index].1)
@@ -28,10 +27,9 @@ struct AdvertisementCarouselView: View {
                         .tag(index)
                 }
             }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)) // Hide default dots
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .frame(height: 220)
             
-            // **Custom Page Indicator Dots**
             HStack {
                 ForEach(sampleAds.indices, id: \.self) { index in
                     Circle()
@@ -54,7 +52,6 @@ struct AdvertisementCarouselView: View {
     }
 }
 
-// **Card View**
 struct AdCardView: View {
     var title: String
     var text: String

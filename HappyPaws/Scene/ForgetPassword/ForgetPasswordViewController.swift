@@ -15,7 +15,7 @@ class ForgetPasswordViewController: UIViewController {
     private lazy var backgroundImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "pets")
+        imageView.image = UIImage(named: "forgetPageBackground")
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()

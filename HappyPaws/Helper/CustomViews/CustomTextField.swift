@@ -20,6 +20,7 @@ struct CustomTextField: View {
                 .foregroundColor(.black)
             
             TextField("", text: $text)
+                .frame(height: 10)
                 .keyboardType(keyboardType)
                 .padding()
                 .background(Color.gray.opacity(0.1))
