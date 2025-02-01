@@ -35,5 +35,5 @@ HappyPaws is an iOS app dedicated to helping pet owners take care of their pets 
 
 ## Testing
 - For testing, you can use the following custom location:
-  ## Latitude: 41.7151
-  ## Longitude: 44.8271
+  - **Latitude**: 41.7151
+  - **Longitude**: 44.8271
