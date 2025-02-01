@@ -89,6 +89,7 @@ class UserProfileViewModel: ObservableObject {
         let db = Firestore.firestore()
         db.collection("users").document(currentUser.uid).getDocument { document, error in
             if let error = error {
+                print("there is an error while fetching user: \(error.localizedDescription)")
                 completion(nil)
             } else {
                 guard let document = document, document.exists else {

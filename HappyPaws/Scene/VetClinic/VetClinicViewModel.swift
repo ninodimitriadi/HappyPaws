@@ -15,6 +15,7 @@ class VetClinicViewModel {
     func fetchClinics(completion: @escaping ([ClinicModel]) -> Void) {
         db.collection("vetClinic").getDocuments { snapshot, error in
             if let error = error {
+                print("there is an error while fetch clinics: \(error.localizedDescription)")
                 completion([])
                 return
             }

@@ -90,9 +90,9 @@ class VetClinicViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         guard annotation is ClinicModel else { return nil }
 
         let identifier = "ClinicPin"
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
         if annotationView == nil {
-            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true
             annotationView?.image = UIImage(named: "hospitalPin")
             annotationView?.frame.size = CGSize(width: 50, height: 50)

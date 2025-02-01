@@ -67,4 +67,31 @@ class GroomingDetailsViewModel: ObservableObject {
             }
         }
     }
+    
+    func formatOpeningHours(_ openingHours: [String]) -> [String] {
+        let weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        let weekends = ["Saturday", "Sunday"]
+        
+        var weekdayHoursSet: Set<String> = []
+        var weekendHoursSet: Set<String> = []
+        
+        for hours in openingHours {
+            let components = hours.components(separatedBy: ": ")
+            guard components.count == 2 else { continue }
+            
+            let day = components[0].trimmingCharacters(in: .whitespaces)
+            let time = components[1].trimmingCharacters(in: .whitespaces)
+            
+            if weekdays.contains(day) {
+                weekdayHoursSet.insert(time)
+            } else if weekends.contains(day) {
+                weekendHoursSet.insert(time)
+            }
+        }
+        
+        let workdayHours = weekdayHoursSet.count == 1 ? "Workdays: \(weekdayHoursSet.first!)" : "Workdays: Varies"
+        let weekendHours = weekendHoursSet.count == 1 ? "Weekend: \(weekendHoursSet.first!)" : "Weekend: Varies"
+        
+        return [workdayHours, weekendHours]
+    }
 }

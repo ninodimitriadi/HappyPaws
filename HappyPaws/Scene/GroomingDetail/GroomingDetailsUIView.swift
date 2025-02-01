@@ -11,6 +11,7 @@ import CoreLocation
 
 struct GroomingDetailsUIView: View {
     @Environment(\.presentationMode) var presentationMode
+    let viewModel = GroomingDetailsViewModel()
     @EnvironmentObject private var languageManager: LanguageManager
     var salon: GroomingSalonModel
     var salonDetail: SalonDetailsModel
@@ -24,7 +25,7 @@ struct GroomingDetailsUIView: View {
                 .frame(width: 600, height: 600)
                 .clipShape(.circle)
             
-            VStack {
+            VStack(spacing: 14) {
                 HStack {
                     Text(salon.name)
                         .font(Font.custom("Inter", size: 20))
@@ -66,10 +67,11 @@ struct GroomingDetailsUIView: View {
                         }
                         
                         if let openingHours = salonDetail.openingHours {
-                            ForEach(openingHours, id: \.self) { hours in
+                            ForEach(viewModel.formatOpeningHours(openingHours), id: \.self) { hours in
                                 Text(hours)
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
+                                    .padding(.top, 6)
                             }
                         } else {
                             Text("N/A")
@@ -89,6 +91,7 @@ struct GroomingDetailsUIView: View {
                 SmallRoundViewWithText(icon: "shower.fill", text: languageManager.localizedString(forKey: "washing_brushing"))
                 SmallRoundViewWithText(icon: "ladybug", text: languageManager.localizedString(forKey: "removal_of_parasites"))
             }
+            .padding(.top, 15)
             
             Button(action: {
                 showBookingView.toggle()
