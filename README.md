@@ -31,7 +31,7 @@ HappyPaws is an iOS app dedicated to helping pet owners take care of their pets 
 
 1. Clone the repository to your local machine:
    ```bash
-   git clone https://github.com/your-username/happypaws.git
+   [git clone https://github.com/your-username/happypaws.git](https://github.com/ninodimitriadi/HappyPaws.git)
 
 ## Testing
 - For testing, you can use the following custom location:
