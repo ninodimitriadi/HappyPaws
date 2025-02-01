@@ -94,8 +94,8 @@ class VetClinicViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         if annotationView == nil {
             annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true
-            annotationView?.image = UIImage(named: "hospitalPin")
-            annotationView?.frame.size = CGSize(width: 50, height: 50)
+            annotationView?.image = UIImage(named: "pinIcon")
+            annotationView?.frame.size = CGSize(width: 45, height: 45)
         } else {
             annotationView?.annotation = annotation
         }

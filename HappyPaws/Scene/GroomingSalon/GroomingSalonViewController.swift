@@ -108,8 +108,8 @@ class GroomingSalonViewController: UIViewController, MKMapViewDelegate, CLLocati
         if annotationView == nil {
             annotationView = MKAnnotationView(annotation: customAnnotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true
-            annotationView?.image = UIImage(named: "salonpin")
-            annotationView?.frame.size = CGSize(width: 50, height: 50)
+            annotationView?.image = UIImage(named: "pinIcon")
+            annotationView?.frame.size = CGSize(width: 45, height: 45)
         } else {
             annotationView?.annotation = customAnnotation
         }
