@@ -336,6 +336,7 @@ class UserProfileViewController: UIViewController {
     private func loadImage(from url: URL) {
         let task = URLSession.shared.dataTask(with: url) { data, _, error in
             if let error = error {
+                print("there is an error while loading image: \(error.localizedDescription)")
                 return
             }
             

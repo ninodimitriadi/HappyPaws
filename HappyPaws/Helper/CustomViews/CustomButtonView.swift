@@ -15,10 +15,19 @@ func createButton(iconName: String) -> UIButton {
     button.tintColor = .black
     button.backgroundColor = .clear
     button.layer.cornerRadius = 0
-    button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
-    button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
     button.contentHorizontalAlignment = .left
     button.heightAnchor.constraint(equalToConstant: 30).isActive = true
+    
+    if #available(iOS 15.0, *) {
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: iconName)
+        config.imagePadding = 15
+        config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 0)
+        button.configuration = config
+    } else {
+        button.setImage(UIImage(systemName: iconName), for: .normal)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
+    }
     
     return button
 }
